@@ -1,0 +1,293 @@
+@import url(https://db.onlinewebfonts.com/c/0c0dd1e3d2eb6c3c20ba22466208c003?family=Soin+Sans+Pro+Roman);
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    font-family: 'Soin Sans Pro Roman', serif;
+}
+
+.dot-flashing {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: black;
+    position: relative;
+    animation: dotFlashing 1s infinite linear alternate;
+    animation-delay: .5s;
+}
+
+.dot-flashing::before, .dot-flashing::after {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: black;
+    position: absolute;
+}
+
+.dot-flashing::before {
+    left: -15px;
+    animation: dotFlashing 1s infinite alternate;
+    animation-delay: 0s;
+}
+
+.dot-flashing::after {
+    left: 15px;
+    animation: dotFlashing 1s infinite alternate;
+    animation-delay: 1s;
+}
+
+@keyframes dotFlashing {
+    0% { opacity: 0; }
+    50%, 100% { opacity: 1;}
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateY(10px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide-in-left {
+    animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.animate-slide-in-left-1 {
+    animation: slideInLeft 0.5s ease-out forwards 0.2s;
+}
+
+.animate-slide-in-left-2 {
+    animation: slideInLeft 0.5s ease-out forwards 0.4s;
+}
+
+.animate-slide-in-left-3 {
+    animation: slideInLeft 0.5s ease-out forwards 0.6s;
+}
+
+.card {
+    box-shadow: none;
+    backface-visibility: visible;
+    background: transparent;
+    transform-style: preserve-3d;
+    padding: 0;
+    margin: 0 2rem 0 0;
+    width: 18rem;
+    height: 25rem;
+    transition: transform 0.2s ease-out, perspective 0.2s ease-out;
+    position: relative;
+    cursor: pointer;
+}
+
+.inner-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column; /* Stack les sections verticalement */
+    align-items: center; /* Centrer horizontalement */
+    justify-content: space-around; /* Centrer verticalement */
+    overflow: hidden;
+    border-radius: 10px;
+    background: rgba(255, 255, 255); /* Exemple : blanc avec une opacité de 0.5 */
+    z-index: 1;
+}
+.top-section{
+    display: flex;
+    align-items: center;
+}
+
+.top-section,
+.middle-section,
+.bottom-section {
+    margin: 10px; /* Ajustez selon vos besoins pour créer de l'espace entre les sections */
+}
+
+.glare {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.custom-bg {
+    background-color: #432C09;
+    /* background-image: url("./public/bg-brown.jpg"); */
+}
+
+.custom-color-h1 {
+    color: black;
+    z-index: 2;
+}
+
+/* img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+} */
+
+/* Style de la carte */
+.card-recipes,
+.card-recipes-desc {
+    width: 300px;
+    margin: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+}
+
+/* Style de l'image de la recette */
+.card-recipes
+img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+/* Style du nom de la recette */
+.card-recipes,
+.card-recipes-desc
+p {
+    /* padding: 10px; */
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Effet de survol */
+.card-recipes:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.card-recipes-desc {
+    width: 70%;
+    max-width: 750px; /* Vous pouvez ajuster cette valeur en fonction de vos besoins */
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.img-recipes-desc img{
+    object-fit: contain;
+    /* border-radius: 8px 8px 0 0; */
+}
+
+.card-desc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.5rem;
+    margin-left: 1rem;
+    height: auto;
+    margin-right: 1rem;
+    background-color: #FFF4ED;
+}
+
+.card-desc svg {
+    width: 20px; /* Ajustez la taille du SVG selon vos besoins */
+    height: 20px; /* Ajustez la taille du SVG selon vos besoins */
+    margin-bottom: 10px; /* Ajoute un espace entre le SVG et le texte "Time" */
+}
+
+.card-desc p {
+    margin: 0; /* Supprime les marges par défaut des paragraphes */
+}
+
+.card-desc, .time-container, .ingredient-container {
+    display: flex;
+    align-items: center;
+}
+
+.card-desc, .time-container, .ingredient-container p {
+    margin: 5px; /* Ajoute un espace entre le SVG et le texte "1h30" */
+}
+
+.ingredient-container, .time-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 2rem;
+}
+
+.container-recipe {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    align-content: center;
+    flex-direction: row;
+}
+.ripple-effect {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background-color: rgba(128, 128, 128, 0.7); /* Gris clair */
+    opacity: 1;
+    z-index: 10;
+    transition: width 0.3s linear, height 0.3s linear, opacity 0.3s ease-out;
+}
+
+@keyframes ripple-animation {
+    to {
+        opacity: 0;
+        width: 200%;
+        height: 200%;
+    }
+}
+
+.heart-svg{
+    transition: fill 0.3s ease;
+}
+
+
+.ul-ingredients {
+    list-style: disc;
+}
+
+.switch-root {
+    width: 42px;
+    height: 25px;
+    background-color: #ddd;
+    border-radius: 9999px;
+    position: relative;
+}
+
+.switch-thumb {
+    display: block;
+    width: 21px;
+    height: 21px;
+    background-color: white;
+    border-radius: 9999px;
+    transition: transform 100ms;
+    transform: translateX(2px);
+}
+
+.switch-root[data-state='checked'] .switch-thumb {
+    transform: translateX(19px);
+    background-color: #93faa5;
+}

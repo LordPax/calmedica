@@ -1,0 +1,46 @@
+{
+  "name": "cuisine-connect",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-dropdown-menu": "^2.1.1",
+    "@radix-ui/react-icons": "^1.3.0",
+    "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-switch": "^1.1.0",
+    "@tanstack/react-query": "^5.45.1",
+    "@types/node": "20.14.8",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.19",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "eslint": "9.5.0",
+    "eslint-config-next": "14.2.4",
+    "formidable": "^3.5.1",
+    "lucide-react": "^0.396.0",
+    "million": "3.1.11",
+    "next": "14.2.4",
+    "openai": "^4.52.0",
+    "postcss": "8.4.38",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "sonner": "^1.5.0",
+    "swr": "^2.2.5",
+    "tailwind-merge": "^2.3.0",
+    "tailwindcss": "3.4.4",
+    "typescript": "5.5.2",
+    "ws": "^8.17.1",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@types/formidable": "^3.4.5"
+  }
+}

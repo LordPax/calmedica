@@ -1,0 +1,11 @@
+# IDE
+.idea
+tags
+.DS_STORE
+
+# Dependencies
+hackathon
+.env
+docs
+.run
+vendor

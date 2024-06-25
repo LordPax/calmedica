@@ -2,15 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRecordVoice } from '@/hooks/useVoiceRecord';
 import Image from 'next/image';
-import keywordsMapping from './keywords.json'
 
-interface ApiResponse {
-    response: {
-        text: string;
-    };
+interface MicrophoneProps {
+    onAudioData: (text: string) => void;
 }
 
-const Microphone: React.FC = () => {
+const Microphone: React.FC<MicrophoneProps> = ({ onAudioData }) => {
     const { startRecording, stopRecording, audioStream, audioData } = useRecordVoice();
     const [isRecording, setIsRecording] = useState<boolean>(false);
     const [rippleSize, setRippleSize] = useState<number>(20);
@@ -34,26 +31,12 @@ const Microphone: React.FC = () => {
             body: formData,
         });
 
-
         if (!response.ok) {
             throw new Error(`Error: ${response.statusText}`);
         }
 
-        await response.json().then((data) => {
-            processRedirection(data);
-        });
-    }
-
-    const processRedirection = (data: ApiResponse) => {
-        if (!data) return;
-        const text = data.response.text;
-
-        for (const [url, keywords] of Object.entries(keywordsMapping)) {
-            if (keywords.some(keyword => text.includes(keyword))) {
-                window.location.href = url;
-                return;
-            }
-        }
+        const data = await response.json();
+        onAudioData(data.response.text);
     }
 
     useEffect(() => {
@@ -72,7 +55,7 @@ const Microphone: React.FC = () => {
         const updateVolume = (): void => {
             analyzer.getByteFrequencyData(dataArray);
             const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
-            const newRippleSize = Math.min(20 + volume * 3, 150);
+            const newRippleSize = Math.min(20 + volume * 1.5, 150);
             setRippleSize(newRippleSize);
             requestAnimationFrame(updateVolume);
         };
@@ -91,6 +74,7 @@ const Microphone: React.FC = () => {
 
     return (
         <button
+            type="button"
             onClick={toggleRecording}
             className="relative w-10 h-10 flex justify-center items-center bg-transparent border-none sm:hidden md:flex lg:flex xl:flex"
         >

@@ -1,37 +1,26 @@
-import prisma from '../lib/prisma';
-import { Like, findLikeByRecipeId } from '@/services/likeService';
+import ky from 'ky';
+
+const BACKEND_URL = process.env.BACKEND_URL;
 
 export interface User {
-    id: string;
-    name?: string | null;
+    id: number;
+    username: string;
+    firstname: string;
+    lastname: string;
     email?: string | null;
-    image?: string | null;
+    profile_image_url: string;
+    created_at: string;
+    updated_at: string;
     emailVerified?: Date | null;
     role?: string;
-    createdAt?: Date;
 }
 
-export const findOneUser = (
-    id: string,
-    select?: Record<string, boolean>,
-): Promise<User | null> => {
-    return prisma.user.findUnique({
-        select,
-        where: {
-            id,
-        },
-    });
+export const findOneUser = async (): Promise<User | null> => {
+    try {
+        const user = await ky.get(`${BACKEND_URL}/users/me`).json<User>();
+        return user;
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        return null;
+    }
 };
-
-export const findUserByRecipeId = async (recipeId: string): Promise<User[]> => {
-    const likes: Like[] = await findLikeByRecipeId(recipeId);
-
-    if (!likes) return [];
-
-    return await Promise.all(
-        likes.map(async (like) => {
-            const user: User | null = await findOneUser(like.userId);
-            return user as User;
-        }),
-    );
-}

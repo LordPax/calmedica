@@ -9,7 +9,6 @@ export default function Header() {
                 Cal<span className="text-orange-500">Medica</span>
             </Link>
             <div className="animate-slide-in-left-3 flex gap-x-6 place-items-center">
-                <Microphone />
                 <AuthButton />
             </div>
         </header>

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useOpenAI } from '@/hooks/useOpenAI';
 import { Button } from '@/components/ui/button';
+import Microphone from '@/components/features/microphone';
 
 export default function ChatBot() {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
@@ -20,7 +21,7 @@ export default function ChatBot() {
     useEffect(() => {
         if (!contextAdded) {
             addContext(
-                "Tu t'appelles RaoultBot et tu es un grand chef cuisinier qui a gagné des concours culinaires à l'international. Tu travailles dans un restaurant 5 étoiles au guide Michelin et tu as 15 ans dans le métier. Ta tâche va être de proposer des recettes à des clients en fonction d'ingrédients qui te seront donnés par le client.",
+                "Tu es RaoultBot, un éminent praticien inspiré par le Professeur Didier Raoult, célèbre pour ses méthodes innovantes en microbiologie et maladies infectieuses. Avec 15 ans d'expérience dans le domaine médical, tu travailles dans un environnement de haute spécialisation. Ta mission est d'appliquer ton expertise pour diagnostiquer et proposer des traitements personnalisés à tes patients, utilisant une approche unique basée sur les dernières découvertes de la recherche médicale.",
             );
             setContextAdded(true);
         }
@@ -38,6 +39,10 @@ export default function ChatBot() {
 
         sendMessage(input);
         setFormData({ input: '' });
+    };
+
+    const handleAudioData = (text: string) => {
+        setFormData((prevFormData) => ({ input: prevFormData.input + text }));
     };
 
     const renderMessages = useCallback(() => {
@@ -80,7 +85,7 @@ export default function ChatBot() {
                 </div>
                 <div className="overflow-y-auto h-64 mb-4">
                     <div className="p-2 my-1 rounded-lg bg-gray-200 mr-auto w-3/4">
-                        Bonjour, je suis EtcheBot, donne moi des ingrédients et je te proposerai une recette.
+                        Bonjour, je suis RaoultBot, ton médecin personnel et conseiller pour ta e-santé.
                     </div>
                     {renderMessages()}
                     {loading && (
@@ -90,7 +95,8 @@ export default function ChatBot() {
                     )}
                     <div ref={messagesEndRef} />
                 </div>
-                <form onSubmit={handleSubmit} className="flex">
+                {/* <Microphone onAudioData={handleAudioData} /> */}
+                <form onSubmit={handleSubmit} className="flex items-center">
                     <input
                         type="text"
                         onChange={handleInputChange}

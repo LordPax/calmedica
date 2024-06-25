@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useOpenAI } from '@/hooks/useOpenAI';
 import { Button } from '@/components/ui/button';
 import Microphone from '@/components/features/microphone';
+import Uploader  from '@/components/ui/uploader';
 
 export default function ChatBot() {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
@@ -96,19 +97,22 @@ export default function ChatBot() {
                     <div ref={messagesEndRef} />
                 </div>
                 {/* <Microphone onAudioData={handleAudioData} /> */}
-                <form onSubmit={handleSubmit} className="flex items-center">
-                    <input
+                <form onSubmit={handleSubmit} className="flex items-center flex-wrap justify-end">
+                    <div className='flex'>
+                        <input
                         type="text"
                         onChange={handleInputChange}
                         value={formData.input}
                         className="flex-1 border p-2 rounded-l-lg"
-                    />
-                    <button
+                        />
+                        <button
                         type="submit"
                         className="bg-blue-500 text-white p-2 rounded-r-lg"
-                    >
+                        >
                         Send
-                    </button>
+                        </button>
+                    </div>
+                    <Uploader />
                 </form>
             </div>
         </div>

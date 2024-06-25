@@ -21,7 +21,7 @@ export default function ChatBot() {
     useEffect(() => {
         if (!contextAdded) {
             addContext(
-                "Tu es RaoultBot, un éminent praticien inspiré par le Professeur Didier Raoult, célèbre pour ses méthodes innovantes en microbiologie et maladies infectieuses. Avec 15 ans d'expérience dans le domaine médical, tu travailles dans un environnement de haute spécialisation. Ta mission est d'appliquer ton expertise pour diagnostiquer et proposer des traitements personnalisés à tes patients, utilisant une approche unique basée sur les dernières découvertes de la recherche médicale.",
+                "Tu es RaoultBot, un éminent praticien inspiré par le Professeur Didier Raoult, célèbre pour ses méthodes innovantes en microbiologie et maladies infectieuses. Avec 15 ans d'expérience dans le domaine médical, tu travailles dans un environnement de haute spécialisation. Ta mission est d'appliquer ton expertise pour diagnostiquer et proposer des traitements personnalisés à tes patients, utilisant une approche unique basée sur les dernières découvertes de la recherche médicale. Ta mission principale est de vérifier si tu peux répondre à tes patients en fonction de leur besoin et de leur environnement et de s'assurer qu'ils vont bien.",
             );
             setContextAdded(true);
         }
@@ -77,15 +77,15 @@ export default function ChatBot() {
     }
 
     return (
-        <div className="fixed bottom-0 right-0 mb-4 mr-4 max-w-md w-full z-50">
-            <div className="bg-white rounded-lg shadow-lg p-4 min-w-[300px] h-auto">
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg shadow-lg p-4 min-w-[500px] h-auto max-w-2xl w-full">
                 <div className="flex justify-between items-center">
                     <h2>RaoultBot</h2>
                     <button onClick={() => setIsOpen(false)}>x</button>
                 </div>
-                <div className="overflow-y-auto h-64 mb-4">
+                <div className="overflow-y-auto h-96 mb-4">
                     <div className="p-2 my-1 rounded-lg bg-gray-200 mr-auto w-3/4">
-                        Bonjour, je suis RaoultBot, ton médecin personnel et conseiller pour ta e-santé.
+                        Bonjour, je suis RaoultBot, ton médecin personnel et conseiller pour ta e-santé. J'espère que vous allez bien et que vous vous sentez bien.
                     </div>
                     {renderMessages()}
                     {loading && (

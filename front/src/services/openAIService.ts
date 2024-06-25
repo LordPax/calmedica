@@ -13,12 +13,10 @@ const openai: OpenAI = new OpenAI({
 
 export const chat = (
     messages: Message[],
-    model: string = 'gpt-3.5-turbo',
+    model: string = 'gpt-4o',
 ): Promise<ChatCompletion> => {
     return openai.chat.completions.create({
         model,
         messages,
     });
 };
-
-

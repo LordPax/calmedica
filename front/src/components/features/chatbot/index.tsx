@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useOpenAI } from '@/hooks/useOpenAI';
 import { Button } from '@/components/ui/button';
 import Microphone from '@/components/features/microphone';
-import Uploader  from '@/components/ui/uploader';
+import Uploader from '@/components/ui/uploader';
 
 export default function ChatBot() {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
@@ -96,23 +96,24 @@ export default function ChatBot() {
                     )}
                     <div ref={messagesEndRef} />
                 </div>
-                {/* <Microphone onAudioData={handleAudioData} /> */}
-                <form onSubmit={handleSubmit} className="flex items-center flex-wrap justify-end">
-                    <div className='flex'>
-                        <input
+                <form onSubmit={handleSubmit} className="flex items-center justify-between w-full space-x-2">
+                    <input
                         type="text"
                         onChange={handleInputChange}
                         value={formData.input}
-                        className="flex-1 border p-2 rounded-l-lg"
-                        />
-                        <button
+                        className="flex-grow border p-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Type your message..."
+                    />
+                    <button
                         type="submit"
-                        className="bg-blue-500 text-white p-2 rounded-r-lg"
-                        >
+                        className="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
                         Send
-                        </button>
+                    </button>
+                    <div className="flex items-center justify-center space-x-3">
+                        <Uploader />
+                        <Microphone onAudioData={handleAudioData} />
                     </div>
-                    <Uploader />
                 </form>
             </div>
         </div>

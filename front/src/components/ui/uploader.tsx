@@ -14,7 +14,7 @@ const Uploader: React.FC = () => {
   const handleReset = () => {
     setFiles([]);
     if (fileInputRef.current) {
-      fileInputRef.current.value = ''; // Réinitialise la valeur de l'input
+      fileInputRef.current.value = '';
     }
   };
 
@@ -37,7 +37,7 @@ const Uploader: React.FC = () => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative mt-2">
       <button onClick={handleIconClick} className="text-gray-500 hover:text-gray-700">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@ const Uploader: React.FC = () => {
       </button>
       {isVisible && (
         <div
-          className="absolute bottom-10 right-0 w-[14.7rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          className="absolute bottom-12 right-0 w-[14.7rem] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onClick={() => fileInputRef.current?.click()}

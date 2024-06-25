@@ -31,6 +31,27 @@ func Validate[T any]() gin.HandlerFunc {
 	}
 }
 
+func ValidateFormData[T any]() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var body T
+
+		if err := c.Bind(&body); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.Abort()
+			return
+		}
+
+		validate := validator.New()
+		if err := validate.Struct(body); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			c.Abort()
+			return
+		}
+
+		c.Set("body", body)
+	}
+}
+
 func Get[T models.Model](name string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var model T

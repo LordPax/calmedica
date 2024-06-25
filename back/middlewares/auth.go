@@ -86,3 +86,19 @@ func IsAdmin() gin.HandlerFunc {
 		c.Next()
 	}
 }
+
+func IsRole(roles []string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		user, _ := c.MustGet("connectedUser").(models.User)
+
+		for _, role := range roles {
+			if user.IsRole(role) {
+				c.Next()
+				return
+			}
+		}
+
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		c.Abort()
+	}
+}

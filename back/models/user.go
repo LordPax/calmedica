@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	ROLE_ADMIN = "admin"
-	ROLE_USER  = "user"
+	ROLE_ADMIN  = "admin"
+	ROLE_DOCTOR = "doctor"
+	ROLE_USER   = "user"
 )
 
 // User implements Model

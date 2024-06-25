@@ -59,6 +59,7 @@ func Migration() error {
 		&User{},
 		&Token{},
 		&VerificationCode{},
+		&Message{},
 	)
 }
 
@@ -67,6 +68,7 @@ func DropTables() error {
 		&User{},
 		&Token{},
 		&VerificationCode{},
+		&Message{},
 	)
 }
 

@@ -37,13 +37,12 @@ export const useOpenAI = () => {
     const sendMicrophoneData = async (audioFile: string | Blob) => {
         setLoading(true);
 
-        // Using FormData to send the audio file and the messages
         const formData = new FormData();
         formData.append('audio', audioFile);
 
         const result = await fetch('/api/microphone', {
             method: 'POST',
-            body: formData, // Sending FormData instead of JSON
+            body: formData,
         });
         const response = await result.json();
 

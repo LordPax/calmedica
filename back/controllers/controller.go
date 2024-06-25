@@ -12,10 +12,10 @@ import (
 )
 
 func RegisterRoutes(r *gin.Engine) {
-	docs.SwaggerInfo.Title = "UrEsport API"
-	docs.SwaggerInfo.Description = "This is a sample server for UrEsport API."
+	docs.SwaggerInfo.Title = "CallMedica API"
+	docs.SwaggerInfo.Description = "This is a sample server for CallMedica API."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "fr.uresport.api"
+	docs.SwaggerInfo.Host = "fr.callmedica.api"
 	docs.SwaggerInfo.BasePath = "/v2"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 

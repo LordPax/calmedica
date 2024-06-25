@@ -3,21 +3,39 @@ package models
 import "hackathon/services"
 
 type Message struct {
-	ID        int    `json:"id" gorm:"primaryKey"`
-	Content   string `json:"content" gorm:"type:text"`
-	AuthorID  int    `json:"author_id"`
-	CreatedAt string `json:"created_at"`
-	UpdatedAt string `json:"updated_at"`
+	ID          int      `json:"id" gorm:"primaryKey"`
+	Content     string   `json:"content" gorm:"type:text"`
+	SenderID    *int     `json:"sender_id"`
+	Phone       string   `json:"phone" gorm:"type:varchar(30)"`
+	Attachments []string `json:"attachment" gorm:"json"`
+	CreatedAt   string   `json:"created_at"`
+	UpdatedAt   string   `json:"updated_at"`
+}
+
+type CreateMessageDto struct {
+	Content string `json:"content" form:"content" validate:"required"`
+	Phone   string `json:"phone" form:"phone" validate:"required"`
+}
+
+type UpdateMessageDto struct {
+	Content string `json:"content" form:"content"`
 }
 
 func FindAllMessage(query services.QueryFilter) ([]Message, error) {
 	var messages []Message
 
 	err := DB.Model(&Message{}).
-		Offset(query.GetSkip()).
-		Limit(query.GetLimit()).
 		Where(query.GetWhere()).
-		Order(query.GetSort()).
+		Find(&messages).Error
+
+	return messages, err
+}
+
+func FindMessages(name string, value any) ([]Message, error) {
+	var messages []Message
+
+	err := DB.Model(&Message{}).
+		Where(name, value).
 		Find(&messages).Error
 
 	return messages, err
@@ -43,5 +61,5 @@ func (m *Message) Save() error {
 }
 
 func ClearMessages() error {
-	return DB.Exec("DELETE FROM users").Error
+	return DB.Exec("DELETE FROM messages").Error
 }

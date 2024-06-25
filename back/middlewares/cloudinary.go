@@ -36,12 +36,6 @@ func FileUploader(availableType []string, size int) gin.HandlerFunc {
 			fileUrls = append(fileUrls, url)
 		}
 
-		if len(fileUrls) == 0 {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to upload file"})
-			c.Abort()
-			return
-		}
-
 		c.Set("files", fileUrls)
 	}
 }

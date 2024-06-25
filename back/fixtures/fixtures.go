@@ -11,7 +11,7 @@ var (
 
 	USER_PASSWORD = "password"
 	USER_NB       = 20
-	USER_ROLES    = []string{models.ROLE_USER, models.ROLE_ADMIN}
+	USER_ROLES    = []string{models.ROLE_USER, models.ROLE_ADMIN, models.ROLE_DOCTOR}
 )
 
 func ImportFixtures() error {

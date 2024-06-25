@@ -5,6 +5,7 @@ export const useRecordVoice = () => {
     const [recording, setRecording] = useState<boolean>(false);
     const [audioData, setAudioData] = useState<Blob | null>(null);
     const [audioStream, setAudioStream] = useState<MediaStream | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const chunks = useRef<BlobPart[]>([]);
 
     const startRecording = (): void => {
@@ -22,26 +23,30 @@ export const useRecordVoice = () => {
     };
 
     useEffect(() => {
+        const getMediaStream = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                setAudioStream(stream);
+                const mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.onstart = () => {
+                    chunks.current = [];
+                };
+                mediaRecorder.ondataavailable = (event: BlobEvent) => {
+                    chunks.current.push(event.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(chunks.current, { type: "audio/wav" });
+                    setAudioData(audioBlob);
+                };
+                mediaRecorderRef.current = mediaRecorder;
+            } catch (err) {
+                console.error("Error accessing media devices:", err);
+                setError("Permission denied. Please allow access to the microphone.");
+            }
+        };
+
         if (typeof window !== "undefined" && !mediaRecorderRef.current) {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then((stream: MediaStream) => {
-                    setAudioStream(stream);
-                    const mediaRecorder = new MediaRecorder(stream);
-                    mediaRecorder.onstart = () => {
-                        chunks.current = [];
-                    };
-                    mediaRecorder.ondataavailable = (event: BlobEvent) => {
-                        chunks.current.push(event.data);
-                    };
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(chunks.current, { type: "audio/wav" });
-                        setAudioData(audioBlob);
-                    };
-                    mediaRecorderRef.current = mediaRecorder;
-                })
-                .catch((error: Error) => {
-                    console.error("Error accessing media devices:", error);
-                });
+            getMediaStream();
         }
 
         return () => {
@@ -51,5 +56,5 @@ export const useRecordVoice = () => {
         };
     }, []);
 
-    return { recording, startRecording, stopRecording, audioData, audioStream };
+    return { recording, startRecording, stopRecording, audioData, audioStream, error };
 };

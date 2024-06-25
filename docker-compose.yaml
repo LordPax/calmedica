@@ -4,7 +4,7 @@ services:
       file: back/docker-compose.yaml
       service: database
 
-  front:
+  front: 
     extends:
       file: front/docker-compose.yaml
       service: node

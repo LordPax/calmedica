@@ -12,10 +12,10 @@ import (
 )
 
 func RegisterRoutes(r *gin.Engine) {
-	docs.SwaggerInfo.Title = "UrEsport API"
-	docs.SwaggerInfo.Description = "This is a sample server for UrEsport API."
+	docs.SwaggerInfo.Title = "CallMedica API"
+	docs.SwaggerInfo.Description = "This is a sample server for CallMedica API."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "fr.uresport.api"
+	docs.SwaggerInfo.Host = "fr.callmedica.api"
 	docs.SwaggerInfo.BasePath = "/v2"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
@@ -58,6 +58,46 @@ func RegisterRoutes(r *gin.Engine) {
 			users.GET("/me",
 				middlewares.IsLoggedIn(true),
 				GetUserMe,
+			)
+			users.GET("/:user/messages",
+				middlewares.IsLoggedIn(true),
+				middlewares.Get[*models.User]("user"),
+				middlewares.IsMe(),
+				GetMessages,
+			)
+		}
+
+		messages := api.Group("/messages")
+		{
+			messages.GET("/:message",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				middlewares.Get[*models.Message]("message"),
+				GetMessage,
+			)
+			messages.GET("/phone/:phone",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				GetMessagesByPhone,
+			)
+			messages.POST("/",
+				middlewares.IsLoggedIn(false),
+				middlewares.ValidateFormData[models.CreateMessageDto](),
+				middlewares.FileUploader(utils.IMAGE, utils.SIZE_10MB),
+				CreateMessage,
+			)
+			messages.PATCH("/:message",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				middlewares.Get[*models.Message]("message"),
+				middlewares.Validate[models.UpdateMessageDto](),
+				UpdateMessage,
+			)
+			messages.DELETE("/:message",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				middlewares.Get[*models.Message]("message"),
+				DeleteMessage,
 			)
 		}
 

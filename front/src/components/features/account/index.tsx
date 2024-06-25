@@ -1,14 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRecipe } from '@/hooks/useRecipe';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import SwitchButton from '@/components/ui/switchButton';
-import { Recipe } from '@/services/recipeService';
-import { useAllergy } from '@/hooks/useAllergy';
-import { useContraindication } from '@/hooks/useContraindication';
 
 interface Profile {
     name: string;

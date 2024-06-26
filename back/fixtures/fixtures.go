@@ -12,10 +12,16 @@ var (
 	USER_PASSWORD = "password"
 	USER_NB       = 20
 	USER_ROLES    = []string{models.ROLE_USER, models.ROLE_ADMIN, models.ROLE_DOCTOR}
+
+	MESSAGE_NB = 100
 )
 
 func ImportFixtures() error {
 	if err := LoadUsers(); err != nil {
+		return err
+	}
+
+	if err := LoadMessages(); err != nil {
 		return err
 	}
 

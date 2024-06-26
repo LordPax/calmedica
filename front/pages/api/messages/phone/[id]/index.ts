@@ -14,7 +14,7 @@ export default async function handler(
     }
 
     try {
-        const response = await fetch(`http://localhost:8080/messages/phone/${id}`);
+        const response = await fetch(`${process.env.BACKEND_URL}/messages/phone/${id}`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

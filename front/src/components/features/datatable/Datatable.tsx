@@ -1,4 +1,6 @@
-import React from 'react';
+"use client";
+
+import React, { useState, useRef } from 'react';
 import {
     Trash2,
     PauseCircle,
@@ -6,10 +8,7 @@ import {
     Eye,
     FileText,
     Download,
-    Video,
     Circle,
-    CheckCircle,
-    XCircle,
 } from 'lucide-react';
 
 interface Data {
@@ -180,56 +179,99 @@ const rows: Data[] = [
 ];
 
 const TableComponent = () => {
+    const chatHistoryRef = useRef<HTMLDivElement>(null);
+    const [messages, setMessages] = useState<string[]>([]);
+    const [modalTitle, setModalTitle] = useState<string>('');
+
+    const handlePhoneClick = async (row: Data) => {
+        try {
+            const response = await fetch(`/api/messages/phone/${row.telPortable.replace(/\s+/g, '')}`);
+            const data = await response.json();
+            setMessages(data.messages || []);
+            setModalTitle(`Historique du chat pour ${row.nom} ${row.prenom} ${row.telPortable}`);
+            if (chatHistoryRef.current) {
+                chatHistoryRef.current.style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error fetching messages:', error);
+        }
+    };
+
+    const handleCloseModal = () => {
+        if (chatHistoryRef.current) {
+            chatHistoryRef.current.style.display = 'none';
+        }
+    };
+
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200">
-            <thead>
-    <tr>
-        <th className="py-2 px-4 border-b">Actions</th>
-        <th className="py-2 px-4 border-b">Étape</th>
-        <th className="py-2 px-4 border-b">Protocole</th>
-        <th className="py-2 px-4 border-b">Tel Portable</th>
-        <th className="py-2 px-4 border-b">Suivi SMS</th>
-        <th className="py-2 px-4 border-b">Date Référence</th>
-        <th className="py-2 px-4 border-b">État</th>
-        <th className="py-2 px-4 border-b">Numéro Opération</th>
-        <th className="py-2 px-4 border-b">Nom</th>
-        <th className="py-2 px-4 border-b">Prénom</th>
-        <th className="py-2 px-4 border-b">Date Naissance</th>
-        <th className="py-2 px-4 border-b">Médecin</th>
-        <th className="py-2 px-4 border-b">Intervention/Examen</th>
-        <th className="py-2 px-4 border-b">Durée Intervention</th>
-    </tr>
-</thead>
-<tbody>
-    {rows.map((row, index) => (
-        <tr key={index}>
-            <td className="py-2 px-4 w-80 border-b">
-                {row.icons.map((icon) => (
-                    <span key={icon.key} className="inline-block mx-1">
-                        {icon}
-                    </span>
-                ))}
-            </td>
-            <td className="py-2 px-4 border-b">{row.etape}</td>
-            <td className="py-2 px-4 border-b">{row.protocole}</td>
-            <td className="py-2 px-4 border-b">{row.telPortable}</td>
-            <td className="py-2 px-4 border-b">{row.suiviSMS}</td>
-            <td className="py-2 px-4 border-b">{row.dateReference}</td>
-            <td className="py-2 px-4 border-b">{row.etat}</td>
-            <td className="py-2 px-4 border-b">{row.numeroOperation}</td>
-            <td className="py-2 px-4 border-b">{row.nom}</td>
-            <td className="py-2 px-4 border-b">{row.prenom}</td>
-            <td className="py-2 px-4 border-b">{row.dateNaissance}</td>
-            <td className="py-2 px-4 border-b">{row.medecin}</td>
-            <td className="py-2 px-4 border-b">{row.interventionExamen}</td>
-            <td className="py-2 px-4 border-b">{row.dureeIntervention}</td>
-        </tr>
-    ))}
-</tbody>
-</table>
-</div>
-);
+                <thead>
+                    <tr>
+                        <th className="py-2 px-4 border-b">Actions</th>
+                        <th className="py-2 px-4 border-b">Étape</th>
+                        <th className="py-2 px-4 border-b">Protocole</th>
+                        <th className="py-2 px-4 border-b">Tel Portable</th>
+                        <th className="py-2 px-4 border-b">Suivi SMS</th>
+                        <th className="py-2 px-4 border-b">Date Référence</th>
+                        <th className="py-2 px-4 border-b">État</th>
+                        <th className="py-2 px-4 border-b">Numéro Opération</th>
+                        <th className="py-2 px-4 border-b">Nom</th>
+                        <th className="py-2 px-4 border-b">Prénom</th>
+                        <th className="py-2 px-4 border-b">Date Naissance</th>
+                        <th className="py-2 px-4 border-b">Médecin</th>
+                        <th className="py-2 px-4 border-b">Intervention/Examen</th>
+                        <th className="py-2 px-4 border-b">Durée Intervention</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows.map((row, index) => (
+                        <tr key={index}>
+                            <td className="py-2 px-4 w-80 border-b">
+                                {row.icons.map((icon) => (
+                                    <span key={icon.key} className="inline-block mx-1">
+                                        {icon}
+                                    </span>
+                                ))}
+                            </td>
+                            <td className="py-2 px-4 border-b">{row.etape}</td>
+                            <td className="py-2 px-4 border-b">{row.protocole}</td>
+                            <td className="py-2 px-4 border-b">
+                                <span
+                                    onClick={() => handlePhoneClick(row)}
+                                    className="text-blue-500 underline cursor-pointer"
+                                >
+                                    {row.telPortable}
+                                </span>
+                            </td>
+                            <td className="py-2 px-4 border-b">{row.suiviSMS}</td>
+                            <td className="py-2 px-4 border-b">{row.dateReference}</td>
+                            <td className="py-2 px-4 border-b">{row.etat}</td>
+                            <td className="py-2 px-4 border-b">{row.numeroOperation}</td>
+                            <td className="py-2 px-4 border-b">{row.nom}</td>
+                            <td className="py-2 px-4 border-b">{row.prenom}</td>
+                            <td className="py-2 px-4 border-b">{row.dateNaissance}</td>
+                            <td className="py-2 px-4 border-b">{row.medecin}</td>
+                            <td className="py-2 px-4 border-b">{row.interventionExamen}</td>
+                            <td className="py-2 px-4 border-b">{row.dureeIntervention}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+            <div ref={chatHistoryRef} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ display: 'none' }}>
+                <div className="bg-white p-6 rounded shadow-lg max-w-lg mx-auto">
+                    <h2 className="text-lg font-bold mb-4">{modalTitle}</h2>
+                    <p>Messages récents :</p>
+                    <ul className="list-disc pl-5">
+                        {messages.map((message, index) => (
+                            <li key={index}>{message}</li>
+                        ))}
+                    </ul>
+                    <button onClick={handleCloseModal} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fermer</button>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default TableComponent;

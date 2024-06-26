@@ -101,6 +101,16 @@ func RegisterRoutes(r *gin.Engine) {
 			)
 		}
 
+		ai := api.Group("/ai")
+		{
+			ai.POST("/chat",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				middlewares.Validate[models.ChatDto](),
+				ChatMessage,
+			)
+		}
+
 		auth := api.Group("/auth")
 		{
 			auth.POST("/login",

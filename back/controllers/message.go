@@ -88,7 +88,6 @@ func GetMessagesByPhone(c *gin.Context) {
 // @Failure		500	{object}	utils.HttpError
 // @Router			/messages/ [post]
 func CreateMessage(c *gin.Context) {
-	ws := services.GetWebsocket()
 	body, _ := c.MustGet("body").(models.CreateMessageDto)
 	connectedUser, userOk := c.Get("connectedUser")
 	files, fileOk := c.Get("files")
@@ -112,9 +111,26 @@ func CreateMessage(c *gin.Context) {
 		return
 	}
 
-	_ = ws.Emit("message", message)
+	go aiMessage(message)
 
 	c.JSON(http.StatusCreated, message)
+}
+
+func aiMessage(message models.Message) {
+	ws := services.GetWebsocket()
+	gptMessage := services.AddImageToChat(message.Attachments, "décris cette image")
+	resp, err := services.Chat(gptMessage)
+	if err != nil {
+		return
+	}
+
+	message.AiResponse = resp.Choices[0].Message.Content
+
+	if message.Save() != nil {
+		return
+	}
+
+	_ = ws.Emit("message", message)
 }
 
 // UpdateMessage godoc

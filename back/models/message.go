@@ -1,6 +1,10 @@
 package models
 
-import "hackathon/services"
+import (
+	"hackathon/services"
+
+	"github.com/sashabaranov/go-openai"
+)
 
 type Message struct {
 	ID          int      `json:"id" gorm:"primaryKey"`
@@ -8,6 +12,7 @@ type Message struct {
 	SenderID    *int     `json:"sender_id"`
 	Phone       string   `json:"phone" gorm:"type:varchar(30)"`
 	Attachments []string `json:"attachment" gorm:"json"`
+	AiResponse  string   `json:"ai_response" gorm:"type:text"`
 	CreatedAt   string   `json:"created_at"`
 	UpdatedAt   string   `json:"updated_at"`
 }
@@ -19,6 +24,10 @@ type CreateMessageDto struct {
 
 type UpdateMessageDto struct {
 	Content string `json:"content" form:"content"`
+}
+
+type ChatDto struct {
+	Messages []openai.ChatCompletionMessage `json:"messages" validate:"required"`
 }
 
 func FindAllMessage(query services.QueryFilter) ([]Message, error) {

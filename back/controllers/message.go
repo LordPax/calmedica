@@ -36,6 +36,29 @@ func GetMessage(c *gin.Context) {
 // @Failure		500	{object}	utils.HttpError
 // @Router			/messages/ [get]
 func GetMessages(c *gin.Context) {
+	query, _ := c.MustGet("query").(services.QueryFilter)
+
+	messages, err := models.FindAllMessage(query)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, messages)
+}
+
+// GetMessagesByUser godoc
+//
+// @Summary		get all messages
+// @Description	get all messages
+// @Tags			message
+// @Accept			json
+// @Produce		json
+// @Param			user	path	int	true	"User ID"
+// @Success		200	{object}	[]models.Message
+// @Failure		500	{object}	utils.HttpError
+// @Router			/users/{user}/messages [get]
+func GetMessagesByUser(c *gin.Context) {
 	user, _ := c.MustGet("user").(*models.User)
 
 	messages, err := models.FindMessages("sender_id", user.ID)
@@ -111,12 +134,14 @@ func CreateMessage(c *gin.Context) {
 		return
 	}
 
-	go aiMessage(message)
+	if len(message.Attachments) > 0 {
+		go sendAiRequest(message)
+	}
 
 	c.JSON(http.StatusCreated, message)
 }
 
-func aiMessage(message models.Message) {
+func sendAiRequest(message models.Message) {
 	ws := services.GetWebsocket()
 	gptMessage := services.AddImageToChat(message.Attachments, "décris cette image")
 	resp, err := services.Chat(gptMessage)

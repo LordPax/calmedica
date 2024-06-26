@@ -1,4 +1,3 @@
-// components/TableComponent.js
 import React from 'react';
 import {
     Trash2,
@@ -30,121 +29,153 @@ interface Data {
     icons: JSX.Element[];
 }
 
+interface PersonalInfo {
+    nom: string;
+    prenom: string;
+    dateNaissance: string;
+    telPortable: string;
+}
+
+interface MedicalInfo {
+    etape: string;
+    protocole: string;
+    suiviSMS: string;
+    dateReference: string;
+    etat: string;
+    numeroOperation: string;
+    medecin: string;
+    interventionExamen: string;
+    dureeIntervention: string;
+}
+
 function createData(
-    etape: string,
-    protocole: string,
-    telPortable: string,
-    suiviSMS: string,
-    dateReference: string,
-    etat: string,
-    numeroOperation: string,
-    nom: string,
-    prenom: string,
-    dateNaissance: string,
-    medecin: string,
-    interventionExamen: string,
-    dureeIntervention: string,
+    personalInfo: PersonalInfo,
+    medicalInfo: MedicalInfo,
     icons: JSX.Element[]
 ): Data {
-    return { etape, protocole, telPortable, suiviSMS, dateReference, etat, numeroOperation, nom, prenom, dateNaissance, medecin, interventionExamen, dureeIntervention, icons };
+    return { ...personalInfo, ...medicalInfo, icons };
 }
 
 const rows: Data[] = [
     createData(
-        'J+1',
-        'Test Classique',
-        '07 89 71 49 59',
-        'OK',
-        '24/06/2024 07:00:00',
-        'Actif',
-        '0987656767',
-        'Thom',
-        'Thom',
-        '25/06/2024',
-        '',
-        '',
-        '',
-        [<Circle />, <Trash2 />, <PauseCircle />, <PlayCircle />, <Eye />, <FileText />, <Download />]
+        {
+            nom: 'Thom',
+            prenom: 'Thom',
+            dateNaissance: '25/06/2024',
+            telPortable: '07 89 71 49 59'
+        },
+        {
+            etape: 'J+1',
+            protocole: 'Test Classique',
+            suiviSMS: 'OK',
+            dateReference: '24/06/2024 07:00:00',
+            etat: 'Actif',
+            numeroOperation: '0987656767',
+            medecin: '',
+            interventionExamen: '',
+            dureeIntervention: ''
+        },
+        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
     ),
     createData(
-        '',
-        'Test Classique',
-        '01 85 09 01 81',
-        'KO',
-        '09/02/2024 07:00:00',
-        'Actif',
-        '325',
-        'FIXE',
-        'Germain',
-        '02/07/1984',
-        '',
-        '',
-        '',
-        [<Circle />, <Trash2 />, <PauseCircle />, <PlayCircle />, <Eye />, <FileText />, <Download />]
+        {
+            nom: 'FIXE',
+            prenom: 'Germain',
+            dateNaissance: '02/07/1984',
+            telPortable: '01 85 09 01 81'
+        },
+        {
+            etape: '',
+            protocole: 'Test Classique',
+            suiviSMS: 'KO',
+            dateReference: '09/02/2024 07:00:00',
+            etat: 'Actif',
+            numeroOperation: '325',
+            medecin: '',
+            interventionExamen: '',
+            dureeIntervention: ''
+        },
+        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
     ),
     createData(
-        '',
-        'Test Classique',
-        '06 00 00 03 17',
-        'OK',
-        '29/01/2024 10:30:00',
-        'Actif',
-        '317',
-        'NAUSETTE',
-        'Jeanne',
-        '13/11/1983',
-        '',
-        '',
-        '',
-        [<Circle />, <Trash2 />, <PauseCircle />, <PlayCircle />, <Eye />, <FileText />, <Download />]
+        {
+            nom: 'NAUSETTE',
+            prenom: 'Jeanne',
+            dateNaissance: '13/11/1983',
+            telPortable: '06 00 00 03 17'
+        },
+        {
+            etape: '',
+            protocole: 'Test Classique',
+            suiviSMS: 'OK',
+            dateReference: '29/01/2024 10:30:00',
+            etat: 'Actif',
+            numeroOperation: '317',
+            medecin: '',
+            interventionExamen: '',
+            dureeIntervention: ''
+        },
+        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
     ),
     createData(
-        '',
-        'Test Classique',
-        '06 00 00 03 14',
-        'OK',
-        '18/01/2024 08:00:00',
-        'Actif',
-        '314',
-        'PWA',
-        'Henri',
-        '10/10/2000',
-        '',
-        '',
-        '',
-        [<Circle />, <Trash2 />, <PauseCircle />, <PlayCircle />, <Eye />, <FileText />, <Download />]
+        {
+            nom: 'PWA',
+            prenom: 'Henri',
+            dateNaissance: '10/10/2000',
+            telPortable: '06 00 00 03 14'
+        },
+        {
+            etape: '',
+            protocole: 'Test Classique',
+            suiviSMS: 'OK',
+            dateReference: '18/01/2024 08:00:00',
+            etat: 'Actif',
+            numeroOperation: '314',
+            medecin: '',
+            interventionExamen: '',
+            dureeIntervention: ''
+        },
+        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
     ),
     createData(
-        '',
-        'Test Classique',
-        '06 00 00 03 01',
-        'OK',
-        '03/01/2024 10:00:00',
-        'Actif',
-        '301',
-        'DOULEUR',
-        'Jean',
-        '10/10/2001',
-        '',
-        '',
-        '',
-        [<Circle />, <Trash2 />, <PauseCircle />, <PlayCircle />, <Eye />, <FileText />, <Download />]
+        {
+            nom: 'DOULEUR',
+            prenom: 'Jean',
+            dateNaissance: '10/10/2001',
+            telPortable: '06 00 00 03 01'
+        },
+        {
+            etape: '',
+            protocole: 'Test Classique',
+            suiviSMS: 'OK',
+            dateReference: '03/01/2024 10:00:00',
+            etat: 'Actif',
+            numeroOperation: '301',
+            medecin: '',
+            interventionExamen: '',
+            dureeIntervention: ''
+        },
+        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
     ),
     createData(
-        '',
-        'Test Classique',
-        '06 00 00 03 04',
-        'OK',
-        '06/07/2023 15:00:00',
-        'Actif',
-        '304',
-        'VIDEO',
-        'Marie',
-        '30/06/1984',
-        '',
-        '',
-        '',
-        [<Circle />, <Trash2 />, <PauseCircle />, <PlayCircle />, <Eye />, <FileText />, <Download />]
+        {
+            nom: 'VIDEO',
+            prenom: 'Marie',
+            dateNaissance: '30/06/1984',
+            telPortable: '06 00 00 03 04'
+        },
+        {
+            etape: '',
+            protocole: 'Test Classique',
+            suiviSMS: 'OK',
+            dateReference: '06/07/2023 15:00:00',
+            etat: 'Actif',
+            numeroOperation: '304',
+            medecin: '',
+            interventionExamen: '',
+            dureeIntervention: ''
+        },
+        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
     ),
 ];
 
@@ -152,53 +183,53 @@ const TableComponent = () => {
     return (
         <div className="overflow-x-auto">
             <table className="min-w-full bg-white border border-gray-200">
-                <thead>
-                    <tr>
-                        <th className="px-4 py-2 border bg-gray-100">Icones</th>
-                        <th className="px-4 py-2 border bg-gray-100">Etape</th>
-                        <th className="px-4 py-2 border bg-gray-100">Protocole</th>
-                        <th className="px-4 py-2 border bg-gray-100">Tél. Portable</th>
-                        <th className="px-4 py-2 border bg-gray-100">Suivi SMS</th>
-                        <th className="px-4 py-2 border bg-gray-100">Date de référence</th>
-                        <th className="px-4 py-2 border bg-gray-100">Etat</th>
-                        <th className="px-4 py-2 border bg-gray-100">Numéro d'opération</th>
-                        <th className="px-4 py-2 border bg-gray-100">Nom</th>
-                        <th className="px-4 py-2 border bg-gray-100">Prénom</th>
-                        <th className="px-4 py-2 border bg-gray-100">Date de naissance</th>
-                        <th className="px-4 py-2 border bg-gray-100">Médecin</th>
-                        <th className="px-4 py-2 border bg-gray-100">Intervention/Examen</th>
-                        <th className="px-4 py-2 border bg-gray-100">Durée intervention</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map((row, index) => (
-                        <tr key={index} className={`border-t ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}`}>
-                            <td className="px-4 py-2 border">
-                                <div className="flex space-x-2">
-                                    {row.icons.map((icon, idx) => (
-                                        <div key={idx} className="text-gray-500">{icon}</div>
-                                    ))}
-                                </div>
-                            </td>
-                            <td className="px-4 py-2 border">{row.etape}</td>
-                            <td className="px-4 py-2 border">{row.protocole}</td>
-                            <td className="px-4 py-2 border">{row.telPortable}</td>
-                            <td className={`px-4 py-2 border ${row.suiviSMS === 'OK' ? 'text-green-600' : 'text-red-600'}`}>{row.suiviSMS}</td>
-                            <td className="px-4 py-2 border text-orange-500">{row.dateReference}</td>
-                            <td className="px-4 py-2 border">{row.etat}</td>
-                            <td className="px-4 py-2 border">{row.numeroOperation}</td>
-                            <td className="px-4 py-2 border">{row.nom}</td>
-                            <td className="px-4 py-2 border">{row.prenom}</td>
-                            <td className="px-4 py-2 border">{row.dateNaissance}</td>
-                            <td className="px-4 py-2 border">{row.medecin}</td>
-                            <td className="px-4 py-2 border">{row.interventionExamen}</td>
-                            <td className="px-4 py-2 border">{row.dureeIntervention}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+            <thead>
+    <tr>
+        <th className="py-2 px-4 border-b">Actions</th>
+        <th className="py-2 px-4 border-b">Étape</th>
+        <th className="py-2 px-4 border-b">Protocole</th>
+        <th className="py-2 px-4 border-b">Tel Portable</th>
+        <th className="py-2 px-4 border-b">Suivi SMS</th>
+        <th className="py-2 px-4 border-b">Date Référence</th>
+        <th className="py-2 px-4 border-b">État</th>
+        <th className="py-2 px-4 border-b">Numéro Opération</th>
+        <th className="py-2 px-4 border-b">Nom</th>
+        <th className="py-2 px-4 border-b">Prénom</th>
+        <th className="py-2 px-4 border-b">Date Naissance</th>
+        <th className="py-2 px-4 border-b">Médecin</th>
+        <th className="py-2 px-4 border-b">Intervention/Examen</th>
+        <th className="py-2 px-4 border-b">Durée Intervention</th>
+    </tr>
+</thead>
+<tbody>
+    {rows.map((row, index) => (
+        <tr key={index}>
+            <td className="py-2 px-4 w-80 border-b">
+                {row.icons.map((icon) => (
+                    <span key={icon.key} className="inline-block mx-1">
+                        {icon}
+                    </span>
+                ))}
+            </td>
+            <td className="py-2 px-4 border-b">{row.etape}</td>
+            <td className="py-2 px-4 border-b">{row.protocole}</td>
+            <td className="py-2 px-4 border-b">{row.telPortable}</td>
+            <td className="py-2 px-4 border-b">{row.suiviSMS}</td>
+            <td className="py-2 px-4 border-b">{row.dateReference}</td>
+            <td className="py-2 px-4 border-b">{row.etat}</td>
+            <td className="py-2 px-4 border-b">{row.numeroOperation}</td>
+            <td className="py-2 px-4 border-b">{row.nom}</td>
+            <td className="py-2 px-4 border-b">{row.prenom}</td>
+            <td className="py-2 px-4 border-b">{row.dateNaissance}</td>
+            <td className="py-2 px-4 border-b">{row.medecin}</td>
+            <td className="py-2 px-4 border-b">{row.interventionExamen}</td>
+            <td className="py-2 px-4 border-b">{row.dureeIntervention}</td>
+        </tr>
+    ))}
+</tbody>
+</table>
+</div>
+);
 };
 
 export default TableComponent;

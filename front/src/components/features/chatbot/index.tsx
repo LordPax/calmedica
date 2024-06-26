@@ -8,7 +8,7 @@ import Uploader from '@/components/ui/uploader';
 
 export default function ChatBot() {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const [formData, setFormData] = useState<{ input: string }>({ input: '' });
     const [contextAdded, setContextAdded] = useState(false);

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"hackathon/models"
+	"hackathon/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -87,6 +88,7 @@ func GetMessagesByPhone(c *gin.Context) {
 // @Failure		500	{object}	utils.HttpError
 // @Router			/messages/ [post]
 func CreateMessage(c *gin.Context) {
+	ws := services.GetWebsocket()
 	body, _ := c.MustGet("body").(models.CreateMessageDto)
 	connectedUser, userOk := c.Get("connectedUser")
 	files, fileOk := c.Get("files")
@@ -109,6 +111,8 @@ func CreateMessage(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	_ = ws.Emit("message", message)
 
 	c.JSON(http.StatusCreated, message)
 }

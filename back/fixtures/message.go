@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 var dataPath = "fixtures/data.csv"
@@ -22,17 +23,25 @@ func fixUnmatchedQuotes(line string) string {
 }
 
 func GenerateFrenchPhoneNumber() string {
-	prefix := rand.Intn(2) + 6               // Génère 6 ou 7 pour le préfixe
-	suffix := rand.Intn(90000000) + 10000000 // Génère un suffixe aléatoire de 8 chiffres
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	return fmt.Sprintf("%d%d", prefix, suffix)
+	var prefix int
+	if r.Intn(10) < 5 {
+		prefix = r.Intn(5) + 1
+	} else {
+		prefix = r.Intn(2) + 6
+	}
+
+	suffix := r.Intn(90000000) + 10000000
+
+	return fmt.Sprintf("0%d%d", prefix, suffix)
 }
 
 func cleanCSVContent(lines []string) []string {
 	var cleanedLines []string
 
 	for _, line := range lines {
-		cleanedLine := fixUnmatchedQuotes(line) // Appliquez la correction des guillemets si nécessaire
+		cleanedLine := fixUnmatchedQuotes(line)
 		cleanedLines = append(cleanedLines, cleanedLine)
 	}
 

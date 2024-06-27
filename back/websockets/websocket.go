@@ -17,7 +17,7 @@ func RegisterWebsocket(r *gin.Engine) {
 	ws.On("ping", PingTest)
 
 	r.GET("/ws",
-		middlewares.IsLoggedIn(false),
+		middlewares.IsLoggedIn(true),
 		ws.GinWsHandler,
 	)
 }

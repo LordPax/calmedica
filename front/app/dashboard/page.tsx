@@ -18,9 +18,13 @@ export default function DasbhoardPage() {
             if (!accessToken) {
                 router.push('/login');
             } else {
-                const ws = WebsocketService.getInstance();
-                ws.on('message', (data) => {
-                    console.log('ws event message', data);
+                const token = localStorage.getItem('access_token') || '';
+                const ws = WebsocketService.getInstance(token);
+                ws.on('message:create', (data) => {
+                    console.log('ws event create message', data);
+                });
+                ws.on('message:image', (data) => {
+                    console.log('ws event image message', data);
                 });
                 setIsLoading(false);
             }

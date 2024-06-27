@@ -4,11 +4,6 @@ services:
       file: back/docker-compose.yaml
       service: database
 
-  front: 
-    extends:
-      file: front/docker-compose.yaml
-      service: node
-
   adminer:
     image: adminer:latest
     ports:

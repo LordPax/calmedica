@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import Microphone from '@/components/features/microphone';
 import Uploader from '@/components/ui/uploader';
 
+//million-ignore
 export default function ChatBot() {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
     const [isOpen, setIsOpen] = useState(false);

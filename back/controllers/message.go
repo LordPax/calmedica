@@ -129,6 +129,11 @@ func CreateMessage(c *gin.Context) {
 		message.SenderID = &connectedUser.ID
 	}
 
+	if err := message.EvaluateMessage(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	if err := message.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -208,4 +213,21 @@ func DeleteMessage(c *gin.Context) {
 	}
 
 	c.Status(http.StatusNoContent)
+}
+
+// UploadImage godoc
+//
+// @Summary		upload image
+// @Description	upload image
+// @Tags			uploads
+// @Accept			json
+// @Produce		json
+// @Param			image	formData	file	true	"Image"
+// @Success		200		{object}	[]string
+// @Failure		400		{object}	utils.HttpError
+// @Failure		500		{object}	utils.HttpError
+// @Router			/upload/images/ [post]
+func UploadImage(c *gin.Context) {
+	files, _ := c.MustGet("files").([]string)
+	c.JSON(http.StatusOK, files)
 }

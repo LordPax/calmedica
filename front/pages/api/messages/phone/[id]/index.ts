@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import {fetchMessages} from '@/services/historyService';
 
 export default async function handler(
     req: NextApiRequest,
@@ -9,17 +10,21 @@ export default async function handler(
     }
 
     const { id } = req.query;
+    console.log('id:', id);
+    console.log('req', req.headers);
     if (!id) {
         return res.status(400).json({ message: 'Missing phone number' });
     }
 
+    const { authorization } = req.headers;
+    if (!authorization) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+
     try {
-        const response = await fetch(`${process.env.BACKEND_URL}/messages/phone/${id}`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return res.status(200).json(data);
+        const messages = await fetchMessages(id as string, authorization);
+        console.log('Messages:', messages);
+        return res.status(200).json(messages);
     } catch (error) {
         console.error('Error fetching messages:', error);
         return res.status(500).json({ message: 'Internal Server Error' });

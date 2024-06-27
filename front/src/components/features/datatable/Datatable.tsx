@@ -28,6 +28,12 @@ interface Data {
     icons: JSX.Element[];
 }
 
+interface Message {
+    content: string;
+    sender_id: number | null;
+    phone: string;
+}
+
 interface PersonalInfo {
     nom: string;
     prenom: string;
@@ -61,7 +67,7 @@ const rows: Data[] = [
             nom: 'Thom',
             prenom: 'Thom',
             dateNaissance: '25/06/2024',
-            telPortable: '07 89 71 49 59'
+            telPortable: '123456789'
         },
         {
             etape: 'J+1',
@@ -180,20 +186,43 @@ const rows: Data[] = [
 
 const TableComponent = () => {
     const chatHistoryRef = useRef<HTMLDivElement>(null);
-    const [messages, setMessages] = useState<string[]>([]);
+    const [messages, setMessages] = useState<{ question: string, answer: string }[]>([]);
     const [modalTitle, setModalTitle] = useState<string>('');
 
     const handlePhoneClick = async (row: Data) => {
         try {
-            const response = await fetch(`/api/messages/phone/${row.telPortable.replace(/\s+/g, '')}`);
+            const response = await fetch(`http://localhost:8080/messages/phone/${row.telPortable.replace(/\s+/g, '')}`);
             const data = await response.json();
-            setMessages(data.messages || []);
+            console.log('Data:', data);
+    
+            if (data && Array.isArray(data)) {
+                const messagesContent = data.map(msg => {
+                    try {
+                        const cleanedContent = msg.content.replace(/^'|'$/g, '');
+                        const parsed = JSON.parse(cleanedContent);
+                        if (parsed && parsed.question && parsed.answer) {
+                            return parsed;
+                        } else {
+                            throw new Error('Invalid JSON structure');
+                        }
+                    } catch (e) {
+                        console.error('Error parsing JSON:', e, 'Message content:', msg.content);
+                        return { question: 'Invalid JSON', answer: 'Invalid JSON' };
+                    }
+                });
+                console.log('Messages Content:', messagesContent);
+                setMessages(messagesContent);
+            } else {
+                setMessages([]);
+            }
+    
             setModalTitle(`Historique du chat pour ${row.nom} ${row.prenom} ${row.telPortable}`);
             if (chatHistoryRef.current) {
                 chatHistoryRef.current.style.display = 'block';
             }
         } catch (error) {
             console.error('Error fetching messages:', error);
+            setMessages([]);
         }
     };
 
@@ -258,18 +287,30 @@ const TableComponent = () => {
                     ))}
                 </tbody>
             </table>
-            <div ref={chatHistoryRef} className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" style={{ display: 'none' }}>
-                <div className="bg-white p-6 rounded shadow-lg max-w-lg mx-auto">
-                    <h2 className="text-lg font-bold mb-4">{modalTitle}</h2>
-                    <p>Messages récents :</p>
-                    <ul className="list-disc pl-5">
-                        {messages.map((message, index) => (
-                            <li key={index}>{message}</li>
-                        ))}
-                    </ul>
-                    <button onClick={handleCloseModal} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fermer</button>
+            <div ref={chatHistoryRef} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" style={{ display: 'none' }}>
+    <div className="bg-white rounded-lg shadow-lg p-4 min-w-[500px] max-w-2xl w-full">
+        <div className="flex justify-between items-center">
+            <h2 className="text-lg font-bold">{modalTitle}</h2>
+            <button onClick={handleCloseModal} className="text-red-500">x</button>
+        </div>
+        <div className="overflow-y-auto h-96 mb-4">
+            {messages.map((message, index) => (
+                <div key={index} className="w-full">
+                    <div className="p-2 my-1 rounded-lg bg-gray-200 mr-auto w-3/4">
+                        <strong>Question:</strong> {message.question}
+                    </div>
+                    <div className="p-2 my-1 rounded-lg bg-blue-100 ml-auto w-3/4">
+                        <strong>Réponse:</strong> {message.answer}
+                    </div>
                 </div>
-            </div>
+            ))}
+        </div>
+        <button onClick={handleCloseModal} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
+            Fermer
+        </button>
+    </div>
+</div>
+
         </div>
     );
 };

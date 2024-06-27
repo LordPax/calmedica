@@ -55,7 +55,7 @@ const Microphone: React.FC<MicrophoneProps> = ({ onAudioData }) => {
         const updateVolume = (): void => {
             analyzer.getByteFrequencyData(dataArray);
             const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
-            const newRippleSize = Math.min(20 + volume * 1.5, 150);
+            const newRippleSize = Math.min(20 + volume * 2, 150);
             setRippleSize(newRippleSize);
             requestAnimationFrame(updateVolume);
         };

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"hackathon/models"
+	"hackathon/services"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,29 @@ func GetMessage(c *gin.Context) {
 // @Failure		500	{object}	utils.HttpError
 // @Router			/messages/ [get]
 func GetMessages(c *gin.Context) {
+	query, _ := c.MustGet("query").(services.QueryFilter)
+
+	messages, err := models.FindAllMessage(query)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, messages)
+}
+
+// GetMessagesByUser godoc
+//
+// @Summary		get all messages
+// @Description	get all messages
+// @Tags			message
+// @Accept			json
+// @Produce		json
+// @Param			user	path	int	true	"User ID"
+// @Success		200	{object}	[]models.Message
+// @Failure		500	{object}	utils.HttpError
+// @Router			/users/{user}/messages [get]
+func GetMessagesByUser(c *gin.Context) {
 	user, _ := c.MustGet("user").(*models.User)
 
 	messages, err := models.FindMessages("sender_id", user.ID)
@@ -87,6 +111,7 @@ func GetMessagesByPhone(c *gin.Context) {
 // @Failure		500	{object}	utils.HttpError
 // @Router			/messages/ [post]
 func CreateMessage(c *gin.Context) {
+	ws := services.GetWebsocket()
 	body, _ := c.MustGet("body").(models.CreateMessageDto)
 	connectedUser, userOk := c.Get("connectedUser")
 	files, fileOk := c.Get("files")
@@ -105,12 +130,39 @@ func CreateMessage(c *gin.Context) {
 		message.SenderID = &connectedUser.ID
 	}
 
+	if err := message.EvaluateMessage(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 	if err := message.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
+	if len(message.Attachments) > 0 {
+		go sendAiRequest(message)
+	}
+
+	_ = ws.Emit("message:create", message)
 	c.JSON(http.StatusCreated, message)
+}
+
+func sendAiRequest(message models.Message) {
+	ws := services.GetWebsocket()
+	gptMessage := services.AddImageToChat(message.Attachments, "décris cette image")
+	resp, err := services.Chat(gptMessage)
+	if err != nil {
+		return
+	}
+
+	message.AiResponse = resp.Choices[0].Message.Content
+
+	if message.Save() != nil {
+		return
+	}
+
+	_ = ws.Emit("message:image", message)
 }
 
 // UpdateMessage godoc
@@ -163,4 +215,21 @@ func DeleteMessage(c *gin.Context) {
 	}
 
 	c.Status(http.StatusNoContent)
+}
+
+// UploadImage godoc
+//
+// @Summary		upload image
+// @Description	upload image
+// @Tags			uploads
+// @Accept			json
+// @Produce		json
+// @Param			image	formData	file	true	"Image"
+// @Success		200		{object}	[]string
+// @Failure		400		{object}	utils.HttpError
+// @Failure		500		{object}	utils.HttpError
+// @Router			/upload/images/ [post]
+func UploadImage(c *gin.Context) {
+	files, _ := c.MustGet("files").([]string)
+	c.JSON(http.StatusOK, files)
 }

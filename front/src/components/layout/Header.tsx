@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { AuthButton } from '@/components/features/auth/AuthButton';
-import Microphone from '@/components/features/microphone';
 
 export default function Header() {
     return (

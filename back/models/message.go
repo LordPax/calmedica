@@ -7,14 +7,16 @@ import (
 )
 
 type Message struct {
-	ID          int      `json:"id" gorm:"primaryKey"`
-	Content     string   `json:"content" gorm:"type:text"`
-	SenderID    *int     `json:"sender_id"`
-	Phone       string   `json:"phone" gorm:"type:varchar(30)"`
-	Attachments []string `json:"attachment" gorm:"json"`
-	AiResponse  string   `json:"ai_response" gorm:"type:text"`
-	CreatedAt   string   `json:"created_at"`
-	UpdatedAt   string   `json:"updated_at"`
+	ID            int      `json:"id" gorm:"primaryKey"`
+	Content       string   `json:"content" gorm:"type:text"`
+	SenderID      *int     `json:"sender_id"`
+	Phone         string   `json:"phone" gorm:"type:varchar(30)"`
+	Attachments   []string `json:"attachment" gorm:"json"`
+	AiResponse    string   `json:"ai_response" gorm:"type:text"`
+	Sentiment     string   `json:"sentiment" gorm:"type:varchar(30)"`
+	SentimentRate float64  `json:"sentiment_rate"`
+	CreatedAt     string   `json:"created_at"`
+	UpdatedAt     string   `json:"updated_at"`
 }
 
 type CreateMessageDto struct {
@@ -48,6 +50,18 @@ func FindMessages(name string, value any) ([]Message, error) {
 		Find(&messages).Error
 
 	return messages, err
+}
+
+func (m *Message) EvaluateMessage() error {
+	evaluation, err := services.EvaluateNegativity(m.Content)
+	if err != nil {
+		return err
+	}
+
+	m.Sentiment = evaluation["amazon"].GeneralSentiment
+	m.SentimentRate = evaluation["amazon"].GeneralSentimentRate
+
+	return nil
 }
 
 func (m *Message) FindOneById(id int) error {

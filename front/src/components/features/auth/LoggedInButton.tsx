@@ -1,6 +1,6 @@
 'use client';
 
-import  { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,14 +13,31 @@ import {
 import { Loader } from '@/components/ui/loader';
 import { useMutation } from '@tanstack/react-query';
 import { LogOut, ShieldCheck, User2 } from 'lucide-react';
-import type { Session } from 'next-auth';
-import { signOut } from 'next-auth/react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from '@/context/sessionProvider';
 
-export const LoggedInButton = ({ user }: { user: Session['user'] }) => {
+export const LoggedInButton = () => {
+  const { accessToken, setAccessToken, setRefreshToken } = useSession();
+  const router = useRouter();
+
   const logout = useMutation({
-    mutationFn: async () => signOut(),
+    mutationFn: async () => {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      setAccessToken(null);
+      setRefreshToken(null);
+    },
+    onSuccess: () => {
+      router.push('/login');
+    },
   });
+
+  if (!accessToken) {
+    return null;
+  }
+
+  const user = { email: 'user@example.com', name: 'John Doe', image: null };
 
   return (
     <DropdownMenu>

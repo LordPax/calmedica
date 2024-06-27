@@ -1,11 +1,14 @@
+import { useSession } from '@/context/sessionProvider';
 import { LoginButton } from './LoginButton';
+import { LoggedInButton } from './LoggedInButton'; // Assurez-vous d'avoir ce composant
 
-export const AuthButton = async () => {
-    // const session = await getAuthSession();
+export const AuthButton = () => {
+    const { accessToken } = useSession();
 
-    // if (session?.user) {
-    //     return <LoggedInButton user={session.user} />;
-    // }
+    if (accessToken) {
+        const user = sessionStorage.getItem('user');
+        return <LoggedInButton user={user} />;
+    }
 
     return <LoginButton />;
 };

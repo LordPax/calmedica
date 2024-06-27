@@ -117,6 +117,16 @@ func RegisterRoutes(r *gin.Engine) {
 			)
 		}
 
+		uploads := api.Group("/upload")
+		{
+			uploads.POST("/images",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				middlewares.FileUploader(utils.IMAGE, utils.SIZE_10MB),
+				UploadImage,
+			)
+		}
+
 		auth := api.Group("/auth")
 		{
 			auth.POST("/login",

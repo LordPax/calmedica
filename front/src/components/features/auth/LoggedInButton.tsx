@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Loader } from '@/components/ui/loader';
 import { useMutation } from '@tanstack/react-query';
-import { LogOut, ShieldCheck, User2 } from 'lucide-react';
+import { LogOut, User2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/context/sessionProvider';
@@ -60,12 +60,6 @@ export const LoggedInButton = () => {
             Mon Compte
           </Link>
         </DropdownMenuItem>
-        {/*<DropdownMenuItem className="cursor-pointer" asChild>*/}
-        {/*  <Link href="/admin">*/}
-        {/*    <ShieldCheck className="mr-2 h-4 w-4" />*/}
-        {/*    Admin*/}
-        {/*  </Link>*/}
-        {/*</DropdownMenuItem>*/}
         <DropdownMenuGroup>
           <DropdownMenuItem className="cursor-pointer" onClick={() => logout.mutate()}>
             {logout.isPending ? (

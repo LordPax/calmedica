@@ -63,12 +63,18 @@ func RegisterRoutes(r *gin.Engine) {
 				middlewares.IsLoggedIn(true),
 				middlewares.Get[*models.User]("user"),
 				middlewares.IsMe(),
-				GetMessages,
+				GetMessagesByUser,
 			)
 		}
 
 		messages := api.Group("/messages")
 		{
+			messages.GET("/",
+				middlewares.IsLoggedIn(true),
+				middlewares.QueryFilter(),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				GetMessages,
+			)
 			messages.GET("/:message",
 				middlewares.IsLoggedIn(true),
 				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
@@ -98,6 +104,16 @@ func RegisterRoutes(r *gin.Engine) {
 				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
 				middlewares.Get[*models.Message]("message"),
 				DeleteMessage,
+			)
+		}
+
+		ai := api.Group("/ai")
+		{
+			ai.POST("/chat",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				middlewares.Validate[models.ChatDto](),
+				ChatMessage,
 			)
 		}
 

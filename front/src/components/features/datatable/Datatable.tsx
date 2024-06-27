@@ -178,6 +178,7 @@ const rows: Data[] = [
     ),
 ];
 
+//million-ignore
 const TableComponent = () => {
     const chatHistoryRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<string[]>([]);
@@ -263,8 +264,8 @@ const TableComponent = () => {
                     <h2 className="text-lg font-bold mb-4">{modalTitle}</h2>
                     <p>Messages récents :</p>
                     <ul className="list-disc pl-5">
-                        {messages.map((message, index) => (
-                            <li key={index}>{message}</li>
+                        {messages.map((message) => (
+                            <li key={message}>{message}</li>
                         ))}
                     </ul>
                     <button onClick={handleCloseModal} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Fermer</button>
@@ -274,4 +275,5 @@ const TableComponent = () => {
     );
 };
 
+//million-ignore
 export default TableComponent;

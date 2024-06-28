@@ -16,6 +16,7 @@ import { LogOut, User2 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useSession } from '@/context/sessionProvider';
+import { DashboardIcon } from '@radix-ui/react-icons';
 
 interface LoggedInButtonProps {
   user: string;
@@ -74,7 +75,7 @@ export const LoggedInButton: React.FC<LoggedInButtonProps> = ({ user: userProp }
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href="/dashboard" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              <User2 className="mr-2 h-4 w-4" />
+              <DashboardIcon className="mr-2 h-4 w-4" />
               <span>Dashboard</span>
             </Link>
           </DropdownMenuItem>

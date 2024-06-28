@@ -19,7 +19,7 @@ export const fetchMessages = async (telPortable: string, accessToken: string) =>
                 try {
                     const cleanedContent = msg.content.replace(/^'|'$/g, '');
                     const parsed = JSON.parse(cleanedContent);
-                    if (parsed && parsed.question && parsed.answer) {
+                    if (parsed?.question && parsed?.answer) {
                         return parsed;
                     } else {
                         throw new Error('Invalid JSON structure');

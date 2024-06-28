@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Trash2, PauseCircle, PlayCircle, Eye, FileText, Download, Circle } from 'lucide-react';
+import { fetchMessages, Message } from '@/services/historyService';
 
 interface Data {
     etape: string;
@@ -51,7 +52,7 @@ const TableComponent = () => {
     const accessToken = localStorage.getItem('access_token') || '';
     const chatHistoryRef = useRef<HTMLDivElement>(null);
     const [users, setUsers] = useState<Data[]>([]);
-    const [messages, setMessages] = useState<{ question: string, answer: string }[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
     const [modalTitle, setModalTitle] = useState<string>('');
 
     useEffect(() => {
@@ -109,20 +110,13 @@ const TableComponent = () => {
         } else {
             console.error('Access token est manquant');
         }
+
+        console.log('messages:', messages);
     }, [accessToken]);
 
     const handlePhoneClick = async (row: Data) => {
-        const request = fetch(`/api/messages/phone/${row.telPortable}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        const response = await request;
-        const messagesContent = await response.json();
-        setMessages(messagesContent);
+        const response = await fetchMessages(row.telPortable, accessToken);
+        setMessages(response);
 
         setModalTitle(`Historique du chat pour ${row.nom} ${row.prenom} ${row.telPortable}`);
         if (chatHistoryRef.current) {
@@ -200,12 +194,15 @@ const TableComponent = () => {
                     <div className="overflow-y-auto h-96 mb-4">
                         {messages.map((message, index) => (
                             <div key={index} className="w-full">
-                                <div className="p-2 my-1 rounded-lg bg-gray-200 mr-auto w-3/4">
-                                    {message.question}
-                                </div>
-                                <div className="p-2 my-1 rounded-lg bg-blue-100 ml-auto w-3/4">
-                                    {message.answer}
-                                </div>
+                                {message.sender_id == null ? (
+                                    <div className="p-2 my-1 rounded-lg bg-gray-200 mr-auto w-3/4">
+                                        {message.content}
+                                    </div>
+                                ) : (
+                                    <div className="p-2 my-1 rounded-lg bg-blue-100 ml-auto w-3/4">
+                                        {message.content}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>

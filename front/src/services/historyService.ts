@@ -1,4 +1,19 @@
-const BASE_URL = `${process.env.BACKEND_URL}`;
+// const BASE_URL = `${process.env.BACKEND_URL}`;
+const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}`;
+
+export interface Message {
+    id: number;
+    content: string;
+    sender_id?: number;
+    phone: string;
+    attachment?: string[];
+    ai_response?: string;
+    images_sentiment?: string;
+    sentiment?: string;
+    sentiment_rate?: number;
+    created_at: string;
+    updated_at: string;
+}
 
 export const fetchMessages = async (telPortable: string, accessToken: string) => {
     try {
@@ -12,26 +27,13 @@ export const fetchMessages = async (telPortable: string, accessToken: string) =>
                 },
             }
         );
-        const data = await response.json();
 
-        if (data) {
-            return data.map((msg:any) => {
-                try {
-                    const cleanedContent = msg.content.replace(/^'|'$/g, '');
-                    const parsed = JSON.parse(cleanedContent);
-                    if (parsed?.question && parsed?.answer) {
-                        return parsed;
-                    } else {
-                        throw new Error('Invalid JSON structure');
-                    }
-                } catch (e) {
-                    console.error('Error parsing JSON:', e);
-                    return { question: 'Invalid JSON', answer: 'Invalid JSON' };
-                }
-            });
-        } else {
+        if (!response.ok) {
+            console.error('Failed to fetch messages.');
             return [];
         }
+
+        return await response.json();
     } catch (error) {
         console.error('Error fetching messages:', error);
         return [];

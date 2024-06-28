@@ -1,10 +1,7 @@
-// TableComponent.tsx
-
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Trash2, PauseCircle, PlayCircle, Eye, FileText, Download, Circle } from 'lucide-react';
-import {fetchMessages} from '@/services/historyService';
 
 interface Data {
     etape: string;
@@ -50,61 +47,87 @@ function createData(
     return { ...personalInfo, ...medicalInfo, icons };
 }
 
-const rows: Data[] = [
-    createData(
-        {
-            nom: 'Thom',
-            prenom: 'Thom',
-            dateNaissance: '25/06/2024',
-            telPortable: '123456789'
-        },
-        {
-            etape: 'J+1',
-            protocole: 'Test Classique',
-            suiviSMS: 'OK',
-            dateReference: '24/06/2024 07:00:00',
-            etat: 'Actif',
-            numeroOperation: '0987656767',
-            medecin: '',
-            interventionExamen: '',
-            dureeIntervention: ''
-        },
-        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
-    ),
-
-];
-
 const TableComponent = () => {
     const accessToken = localStorage.getItem('access_token') || '';
     const chatHistoryRef = useRef<HTMLDivElement>(null);
+    const [users, setUsers] = useState<Data[]>([]);
     const [messages, setMessages] = useState<{ question: string, answer: string }[]>([]);
     const [modalTitle, setModalTitle] = useState<string>('');
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const request = await fetch(`/api/users`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!request.ok) {
+                    throw new Error('La réponse du réseau n\'était pas correcte');
+                }
+
+                const userData = await request.json();
+
+                if (userData.length === 0) {
+                    console.warn('Aucun utilisateur trouvé');
+                }
+
+                const formattedData = userData.map((user: any) => 
+                    createData(
+                        {
+                            nom: user.firstname,
+                            prenom: user.lastname,
+                            dateNaissance: user.dateNaissance,
+                            telPortable: "123456789",
+                            // telPortable: user.telPortable,
+                        },
+                        {
+                            etape: user.etape,
+                            protocole: user.protocole,
+                            suiviSMS: user.suiviSMS,
+                            dateReference: user.dateReference,
+                            etat: user.etat,
+                            numeroOperation: user.numeroOperation,
+                            medecin: user.medecin,
+                            interventionExamen: user.interventionExamen,
+                            dureeIntervention: user.dureeIntervention,
+                        },
+                        [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
+                    )
+                );
+                setUsers(formattedData);
+            } catch (error) {
+                console.error('Erreur lors de la récupération des utilisateurs:', error);
+            }
+        };
+
+        if (accessToken) {
+            fetchData();
+        } else {
+            console.error('Access token est manquant');
+        }
+    }, [accessToken]);
 
     const handlePhoneClick = async (row: Data) => {
-        const request = fetch (`/api/messages/phone/${row.telPortable}`, {
+        const request = fetch(`/api/messages/phone/${row.telPortable}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
             },
-        });    
-
+        });
 
         const response = await request;
         const messagesContent = await response.json();
         setMessages(messagesContent);
 
-        console.log('token:', accessToken);
-        //const messagesContent = await fetchMessages(row.telPortable, accessToken);
-
         setModalTitle(`Historique du chat pour ${row.nom} ${row.prenom} ${row.telPortable}`);
         if (chatHistoryRef.current) {
             chatHistoryRef.current.style.display = 'block';
         }
-
-        console.log('Messages:', messagesContent);
-        console.log('message.question', messagesContent[0].question);
     };
 
     const handleCloseModal = () => {
@@ -135,7 +158,7 @@ const TableComponent = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {rows.map((row, index) => (
+                    {users.map((row, index) => (
                         <tr key={index}>
                             <td className="py-2 px-4 w-80 border-b">
                                 {row.icons.map((icon) => (

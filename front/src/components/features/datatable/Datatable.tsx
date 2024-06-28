@@ -57,7 +57,6 @@ const TableComponent = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log('Envoi de la requête pour récupérer les utilisateurs');
                 const request = await fetch(`/api/users`, {
                     method: 'GET',
                     headers: {
@@ -71,7 +70,6 @@ const TableComponent = () => {
                 }
 
                 const userData = await request.json();
-                console.log('Utilisateurs récupérés:', userData);  // Journal des données utilisateur pour vérification
 
                 if (userData.length === 0) {
                     console.warn('Aucun utilisateur trouvé');

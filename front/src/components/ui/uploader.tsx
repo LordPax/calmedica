@@ -21,7 +21,7 @@ const Uploader: React.FC = () => {
   const handleIconClick = () => {
     setIsVisible(!isVisible);
     if (!isVisible && fileInputRef.current) {
-      fileInputRef.current.click(); // Ouvre l'explorateur de fichiers si la zone devient visible
+      fileInputRef.current.click();
     }
   };
 

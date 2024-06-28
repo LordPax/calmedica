@@ -10,7 +10,7 @@ const ChatBot: React.FC = () => {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
     const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    const [formData, setFormData] = useState<{ input: string }>({ input: '' });
+    const [formData, setFormData] = useState<{ input: string, files: File[] }>({ input: '', files: [] }); // State to hold input and files
     const [contextAdded, setContextAdded] = useState(false);
     const [surveyStep, setSurveyStep] = useState<number>(0);
     const [survey, setSurvey] = useState<{ question: string; options: string[] } | null>(null);
@@ -30,48 +30,53 @@ const ChatBot: React.FC = () => {
         }
     }, [addContext, contextAdded]);
 
-    useEffect(() => {
-        const fetchSurveyQuestion = async () => {
-            const response = await fetch('/api/survey', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ step: surveyStep }),
-            });
-
-            if (response.ok) {
-                const surveyState = await response.json();
-                setSurvey(surveyState);
-            } else {
-                console.error('Failed to fetch survey question.');
-            }
-        };
-
-        fetchSurveyQuestion();
-    }, [surveyStep]);
-
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ input: event.target.value });
+        console.log('formData', formData);
+        setFormData((prevFormData) => ({ ...prevFormData, input: event.target.value }));
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const { input } = formData;
+        const { input, files } = formData;
 
         if (!input) return;
 
         sendMessage(input);
-        setFormData({ input: '' });
+        setFormData({ input: '', files: [] });
+
+        if (files.length > 0) {
+            const formDataToSend = new FormData();
+            formDataToSend.append('phone', '123456789');
+            formDataToSend.append('content', input);
+            files.forEach(file => {
+                formDataToSend.append('upload[]', file);
+            });
+
+            try {
+                const response = await fetch('http://localhost:8080/messages/', {
+                    method: 'POST',
+                    body: formDataToSend,
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(result);
+                } else {
+                    console.error('Failed to upload files.');
+                }
+            } catch (error) {
+                console.error('Error uploading files:', error);
+            }
+        }
     };
 
     const handleAudioData = (text: string) => {
-        setFormData((prevFormData) => ({ input: prevFormData.input + text }));
+        setFormData((prevFormData) => ({ ...prevFormData, input: prevFormData.input + text }));
     }
-    const handleSurveyResponse = (response: string) => {
-        sendMessage(response);
-        setSurveyStep(prevStep => prevStep + 1);
-    };
+
+    const handleFilesData = (files: File[]) => {
+        setFormData((prevFormData) => ({ ...prevFormData, files }));
+    }
 
     const renderMessages = useCallback(() => {
         return messages?.length > 0
@@ -138,7 +143,7 @@ const ChatBot: React.FC = () => {
                         Send
                     </button>
                     <div className="flex items-center justify-center space-x-3">
-                        <Uploader />
+                        <Uploader onFilesdData={handleFilesData} />
                         <Microphone onAudioData={handleAudioData} />
                     </div>
                 </form>

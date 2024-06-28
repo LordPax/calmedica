@@ -3,7 +3,7 @@ const BASE_URL = `${process.env.BACKEND_URL}`;
 export const fetchUsers = async (accessToken: string) => {
     try {
         const response = await fetch(
-            `${BASE_URL}/users`,
+            `${BASE_URL}/patients`,
             {
                 method: 'GET',
                 headers: {

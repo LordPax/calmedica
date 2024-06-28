@@ -28,23 +28,39 @@ interface PersonalInfo {
 }
 
 interface MedicalInfo {
-    etape: string;
-    protocole: string;
-    suiviSMS: string;
-    dateReference: string;
-    etat: string;
-    numeroOperation: string;
-    medecin: string;
-    interventionExamen: string;
-    dureeIntervention: string;
+    etape: string,
+    protocole: string,
+    telPortable: string,
+    suiviSMS: string,
+    dateReference: string,
+    etat: string,
+    numeroOperation: string,
+    nom: string,
+    prenom: string,
+    dateNaissance: string,
+    medecin: string,
+    interventionExamen: string,
+    dureeIntervention: string,
 }
+// interface MedicalInfo {
+//     etape: string;
+//     protocole: string;
+//     suiviSMS: string;
+//     dateReference: string;
+//     etat: string;
+//     numeroOperation: string;
+//     medecin: string;
+//     interventionExamen: string;
+//     dureeIntervention: string;
+// }
 
 function createData(
-    personalInfo: PersonalInfo,
+    //personalInfo: PersonalInfo,
     medicalInfo: MedicalInfo,
     icons: JSX.Element[]
 ): Data {
-    return { ...personalInfo, ...medicalInfo, icons };
+    //return { ...personalInfo, ...medicalInfo, icons };
+    return { ...medicalInfo, icons };
 }
 
 const TableComponent = () => {
@@ -76,24 +92,42 @@ const TableComponent = () => {
                 }
 
                 const formattedData = userData.map((user: any) => 
+                    // createData(
+                    //     {
+                    //         nom: user.firstname,
+                    //         prenom: user.lastname,
+                    //         dateNaissance: user.dateNaissance,
+                    //         telPortable: "123456789",
+                    //         // telPortable: user.telPortable,
+                    //     },
+                    //     {
+                    //         etape: user.etape,
+                    //         protocole: user.protocole,
+                    //         suiviSMS: user.suiviSMS,
+                    //         dateReference: user.dateReference,
+                    //         etat: user.etat,
+                    //         numeroOperation: user.numeroOperation,
+                    //         medecin: user.medecin,
+                    //         interventionExamen: user.interventionExamen,
+                    //         dureeIntervention: user.dureeIntervention,
+                    //     },
+                    //     [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
+                    // ),
                     createData(
                         {
-                            nom: user.firstname,
-                            prenom: user.lastname,
-                            dateNaissance: user.dateNaissance,
-                            telPortable: "123456789",
-                            // telPortable: user.telPortable,
-                        },
-                        {
-                            etape: user.etape,
-                            protocole: user.protocole,
-                            suiviSMS: user.suiviSMS,
-                            dateReference: user.dateReference,
-                            etat: user.etat,
-                            numeroOperation: user.numeroOperation,
-                            medecin: user.medecin,
-                            interventionExamen: user.interventionExamen,
-                            dureeIntervention: user.dureeIntervention,
+                            etape: user.step,
+                            protocole: user.protocol,
+                            telPortable: user.phone,
+                            suiviSMS: user.sms,
+                            dateReference: user.date,
+                            etat: user.state,
+                            numeroOperation: user.number,
+                            nom: user.lastname,
+                            prenom: user.firstname,
+                            dateNaissance: user.birthdate,
+                            medecin: user.medic,
+                            interventionExamen: user.examen_intervention,
+                            dureeIntervention: user.intervention_duration,
                         },
                         [<Circle key="circle" />, <Trash2 key="trash2" />, <PauseCircle key="pause" />, <PlayCircle key="play" />, <Eye key="eye" />, <FileText key="filetext" />, <Download key="download" />]
                     )
@@ -153,8 +187,8 @@ const TableComponent = () => {
                         <th className="py-2 px-4 border-b">Prénom</th>
                         <th className="py-2 px-4 border-b">Date Naissance</th>
                         <th className="py-2 px-4 border-b">Médecin</th>
-                        <th className="py-2 px-4 border-b">Intervention/Examen</th>
-                        <th className="py-2 px-4 border-b">Durée Intervention</th>
+                        {/* <th className="py-2 px-4 border-b">Intervention/Examen</th>
+                        <th className="py-2 px-4 border-b">Durée Intervention</th> */}
                     </tr>
                 </thead>
                 <tbody>

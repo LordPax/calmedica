@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/button';
 import Microphone from '@/components/features/microphone';
 import Uploader from '@/components/ui/uploader';
 
-//million-ignore
-export default function ChatBot() {
+const ChatBot: React.FC = () => {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
     const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const [formData, setFormData] = useState<{ input: string }>({ input: '' });
     const [contextAdded, setContextAdded] = useState(false);
+    const [surveyStep, setSurveyStep] = useState<number>(0);
+    const [survey, setSurvey] = useState<{ question: string; options: string[] } | null>(null);
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -28,6 +29,27 @@ export default function ChatBot() {
             setContextAdded(true);
         }
     }, [addContext, contextAdded]);
+
+    useEffect(() => {
+        const fetchSurveyQuestion = async () => {
+            const response = await fetch('/api/survey', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ step: surveyStep }),
+            });
+
+            if (response.ok) {
+                const surveyState = await response.json();
+                setSurvey(surveyState);
+            } else {
+                console.error('Failed to fetch survey question.');
+            }
+        };
+
+        fetchSurveyQuestion();
+    }, [surveyStep]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ input: event.target.value });
@@ -45,6 +67,10 @@ export default function ChatBot() {
 
     const handleAudioData = (text: string) => {
         setFormData((prevFormData) => ({ input: prevFormData.input + text }));
+    }
+    const handleSurveyResponse = (response: string) => {
+        sendMessage(response);
+        setSurveyStep(prevStep => prevStep + 1);
     };
 
     const renderMessages = useCallback(() => {
@@ -114,9 +140,44 @@ export default function ChatBot() {
                     <div className="flex items-center justify-center space-x-3">
                         <Uploader />
                         <Microphone onAudioData={handleAudioData} />
+                        {survey ? (
+                    <div className="my-4">
+                        <p>{survey.question}</p>
+                        <div className="flex flex-wrap space-x-2">
+                            {survey.options.map((option, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() => handleSurveyResponse(option)}
+                                    className="bg-blue-500 text-white p-2 rounded my-1"
+                                >
+                                    {option}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                ) : (
+                    <form onSubmit={handleSubmit} className="flex items-center flex-wrap justify-end">
+                        <div className='flex'>
+                            <input
+                                type="text"
+                                onChange={handleInputChange}
+                                value={formData.input}
+                                className="flex-1 border p-2 rounded-l-lg"
+                            />
+                            <button
+                                type="submit"
+                                className="bg-blue-500 text-white p-2 rounded-r-lg"
+                            >
+                                Send
+                            </button>
+                        </div>
+                    </form>
+                )}
                     </div>
                 </form>
             </div>
         </div>
     );
 }
+
+export default ChatBot;

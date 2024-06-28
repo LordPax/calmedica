@@ -1,5 +1,3 @@
-// historyService.ts
-
 const BASE_URL = `${process.env.BACKEND_URL}`;
 
 export const fetchMessages = async (telPortable: string, accessToken: string) => {
@@ -15,7 +13,6 @@ export const fetchMessages = async (telPortable: string, accessToken: string) =>
             }
         );
         const data = await response.json();
-        console.log('Data:', data);
 
         if (data) {
             return data.map((msg:any) => {
@@ -28,7 +25,7 @@ export const fetchMessages = async (telPortable: string, accessToken: string) =>
                         throw new Error('Invalid JSON structure');
                     }
                 } catch (e) {
-                    console.error('Error parsing JSON:', e, 'Message content:', msg.content);
+                    console.error('Error parsing JSON:', e);
                     return { question: 'Invalid JSON', answer: 'Invalid JSON' };
                 }
             });

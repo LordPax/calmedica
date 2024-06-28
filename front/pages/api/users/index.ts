@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import {fetchMessages} from '@/services/historyService';
+import { fetchUsers } from '@/services/datatableService';
 
 export default async function handler(
     req: NextApiRequest,
@@ -9,22 +9,16 @@ export default async function handler(
         return res.status(400).json({ message: 'Invalid method' });
     }
 
-    const { id } = req.query;
-    if (!id) {
-        return res.status(400).json({ message: 'Missing phone number' });
-    }
-
     const { authorization } = req.headers;
     if (!authorization) {
         return res.status(401).json({ message: 'Unauthorized' });
     }
 
     try {
-        const messages = await fetchMessages(id as string, authorization);
-        console.log('Messages:', messages);
-        return res.status(200).json(messages);
+        const users = await fetchUsers(authorization);
+        return res.status(200).json(users);
     } catch (error) {
-        console.error('Error fetching messages:', error);
+        console.error('Error fetching users:', error);
         return res.status(500).json({ message: 'Internal Server Error' });
     }
 }

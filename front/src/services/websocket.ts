@@ -3,12 +3,8 @@ export class WebsocketService {
     private ws: WebSocket;
     private event: Record<string, (data: any) => void> = {};
 
-    constructor(token?: string) {
-        let url = process.env.SOCKET_URL || 'ws://localhost:8080/ws'
-
-        if (token) {
-            url += `?token=${token}`
-        }
+    constructor(token: string) {
+        const url = `${process.env.NEXT_PUBLIC_SOCKET_URL }?token=${token}`;
 
         this.ws = new WebSocket(url);
         this.ws.onmessage = (event) => {
@@ -21,9 +17,13 @@ export class WebsocketService {
 
     static getInstance(token?: string): WebsocketService {
         if (!WebsocketService.instance)
-            WebsocketService.instance = new WebsocketService(token);
+            WebsocketService.instance = new WebsocketService(token || '');
 
         return WebsocketService.instance;
+    }
+
+    disconnect(): void {
+        this.ws.close();
     }
 
     on(event: string, callback: (data: any) => void): void {

@@ -2,21 +2,23 @@ package models
 
 import (
 	"hackathon/services"
+	"time"
 
 	"github.com/sashabaranov/go-openai"
 )
 
 type Message struct {
-	ID            int      `json:"id" gorm:"primaryKey"`
-	Content       string   `json:"content" gorm:"type:text"`
-	SenderID      *int     `json:"sender_id"`
-	Phone         string   `json:"phone" gorm:"type:varchar(30)"`
-	Attachments   []string `json:"attachment" gorm:"json"`
-	AiResponse    string   `json:"ai_response" gorm:"type:text"`
-	Sentiment     string   `json:"sentiment" gorm:"type:varchar(30)"`
-	SentimentRate float64  `json:"sentiment_rate"`
-	CreatedAt     string   `json:"created_at"`
-	UpdatedAt     string   `json:"updated_at"`
+	ID              int       `json:"id" gorm:"primaryKey"`
+	Content         string    `json:"content" gorm:"type:text"`
+	SenderID        *int      `json:"sender_id"`
+	Phone           string    `json:"phone" gorm:"type:varchar(30)"`
+	Attachments     []string  `json:"attachment" gorm:"json"`
+	AiResponse      string    `json:"ai_response" gorm:"type:text"`
+	ImagesSentiment string    `json:"images_sentiment" gorm:"type:text"`
+	Sentiment       string    `json:"sentiment" gorm:"type:varchar(30)"`
+	SentimentRate   float64   `json:"sentiment_rate"`
+	CreatedAt       time.Time `json:"created_at"`
+	UpdatedAt       time.Time `json:"updated_at"`
 }
 
 type CreateMessageDto struct {

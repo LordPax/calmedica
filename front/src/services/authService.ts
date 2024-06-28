@@ -13,14 +13,13 @@ export const login = async (email: string, password: string) => {
     }
 };
 
-export const logout = async () => {
-    try {
-        const response = await ky.post(`${BASE_URL}/logout`).json();
-        return response;
-    } catch (error) {
-        console.error('Error logging out:', error);
-        throw error;
-    }
+export const logout = async (accessToken: string) => {
+  return await ky.post(`${BASE_URL}/logout`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  }).json();
 };
 
 export const register = async (userData: { email: string; firstname: string; lastname: string; password: string; username: string }) => {

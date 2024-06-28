@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 if (action === 'login') {
                     response = await login(email, password);
                 } else if (action === 'logout') {
-                    response = await logout();
+                    response = await logout(req.body);
                 } else if (action === 'register') {
                     const userData = { email, firstname, lastname, password, username };
                     response = await register(userData);

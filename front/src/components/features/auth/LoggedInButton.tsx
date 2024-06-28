@@ -68,12 +68,6 @@ export const LoggedInButton: React.FC<LoggedInButtonProps> = ({ user: userProp }
         <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-700">Actions</DropdownMenuLabel>
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href="/account" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-              <User2 className="mr-2 h-4 w-4" />
-              <span>Mon Compte</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
             <Link href="/dashboard" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               <DashboardIcon className="mr-2 h-4 w-4" />
               <span>Dashboard</span>

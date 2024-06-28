@@ -141,16 +141,17 @@ func CreateMessage(c *gin.Context) {
 	}
 
 	if len(message.Attachments) > 0 {
-		go sendAiRequest(message)
+		go imageSentiment(message)
+		go imageResponse(message)
 	}
 
 	_ = ws.Emit("message:create", message)
 	c.JSON(http.StatusCreated, message)
 }
 
-func sendAiRequest(message models.Message) {
+func imageResponse(message models.Message) {
 	ws := services.GetWebsocket()
-	gptMessage := services.AddImageToChat(message.Attachments, "décris cette image")
+	gptMessage := services.AddImageToChat(message.Attachments, message.Content)
 	resp, err := services.Chat(gptMessage)
 	if err != nil {
 		return
@@ -162,7 +163,24 @@ func sendAiRequest(message models.Message) {
 		return
 	}
 
-	_ = ws.Emit("message:image", message)
+	_ = ws.Emit("message:image-ai", message)
+}
+
+func imageSentiment(message models.Message) {
+	ws := services.GetWebsocket()
+	gptMessage := services.AddImageToChat(message.Attachments, services.IMAGE_PROMPT)
+	resp, err := services.Chat(gptMessage)
+	if err != nil {
+		return
+	}
+
+	message.ImagesSentiment = resp.Choices[0].Message.Content
+
+	if message.Save() != nil {
+		return
+	}
+
+	_ = ws.Emit("message:image-ai", message)
 }
 
 // UpdateMessage godoc

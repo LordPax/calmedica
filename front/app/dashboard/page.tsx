@@ -20,12 +20,14 @@ export default function DasbhoardPage() {
             } else {
                 const token = localStorage.getItem('access_token') || '';
                 const ws = WebsocketService.getInstance(token);
+
                 ws.on('message:create', (data) => {
                     console.log('ws event create message', data);
                 });
-                ws.on('message:image', (data) => {
+                ws.on('message:image-ai', (data) => {
                     console.log('ws event image message', data);
                 });
+
                 setIsLoading(false);
             }
         }

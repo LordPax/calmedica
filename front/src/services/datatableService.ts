@@ -22,3 +22,26 @@ export const fetchUsers = async (accessToken: string) => {
         return [];
     }
 };
+
+export const fetchMessages = async (accessToken: string) => {
+    try {
+        const response = await fetch(
+            `${BASE_URL}/messages`,
+            {
+                method: 'GET',
+                headers: {
+                    'Authorization': `${accessToken}`,
+                    'Content-Type': 'application/json',
+                },
+            }
+        );
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return [];
+    }
+};

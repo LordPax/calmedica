@@ -31,6 +31,7 @@ type UpdateMessageDto struct {
 }
 
 type ChatDto struct {
+	Phone    string                         `json:"phone" validate:"required"`
 	Messages []openai.ChatCompletionMessage `json:"messages" validate:"required"`
 }
 

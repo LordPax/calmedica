@@ -92,8 +92,10 @@ const TableComponent = () => {
     const accessToken = localStorage.getItem('access_token') || '';
     const chatHistoryRef = useRef<HTMLDivElement>(null);
     const modalRef = useRef<HTMLDivElement>(null);
+    const [clickedPhone, setClickedPhone] = useState<string>('');
     const [users, setUsers] = useState<Data[]>([]);
     const [messages, setMessages] = useState<Message[]>([]);
+    const [messagesByPhone, setMessagesByPhone] = useState<Record<string, Message[]>>({});
     const [modalTitle, setModalTitle] = useState<string>('');
 
     useEffect(() => {
@@ -175,6 +177,16 @@ const TableComponent = () => {
                     );
                 }).filter((data: Data | null) => data !== null);
 
+                for (const data of combinedData) {
+                    const response = await fetchMessages(data.telPortable, accessToken);
+                    setMessagesByPhone((prevMessagesByPhone) => {
+                        return {
+                            ...prevMessagesByPhone,
+                            [data.telPortable]: response,
+                        };
+                    });
+                }
+
                 setUsers(combinedData);
             } catch (error) {
                 console.error('Erreur lors de la récupération des utilisateurs:', error);
@@ -186,17 +198,18 @@ const TableComponent = () => {
             const ws = WebsocketService.getInstance(accessToken);
             ws.on('message:create', (data) => {
                 console.log('ws event create message', data);
-                setMessages((prevMessages) => [...prevMessages, data]);
+                setMessagesByPhone((prevMessagesByPhone) => {
+                    const phone = data.phone;
+                    const messages = prevMessagesByPhone[phone] || [];
+                    return {
+                        ...prevMessagesByPhone,
+                        [phone]: [...messages, data],
+                    };
+                });
             });
-            ws.on('message:image-ai', (data) => {
-                console.log('ws event image message', data);
-            });
-
         } else {
             console.error('Access token est manquant');
         }
-
-        console.log('messages:', messages);
     }, [accessToken]);
 
     const getIconColor = (etat: string) => {
@@ -213,8 +226,7 @@ const TableComponent = () => {
     };
 
     const handlePhoneClick = async (row: Data) => {
-        const response = await fetchMessages(row.telPortable, accessToken);
-        setMessages(response);
+        setClickedPhone(row.telPortable);
 
         setModalTitle(`Historique du chat pour ${row.nom} ${row.prenom} ${row.telPortable}`);
         if (chatHistoryRef.current) {
@@ -301,7 +313,7 @@ const TableComponent = () => {
                         <button onClick={handleCloseModal} className="text-red-500">x</button>
                     </div>
                     <div className="overflow-y-auto h-96 mb-4">
-                        {messages.map((message, index) => (
+                        {messagesByPhone[clickedPhone]?.map((message, index) => (
                             <div key={index} className="w-full mb-4">
                                 {message.sender_id == null ? (
                                     <div className="flex flex-col items-end w-3/4 ml-auto">

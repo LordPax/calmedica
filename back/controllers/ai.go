@@ -30,7 +30,7 @@ func ChatMessage(c *gin.Context) {
 
 	message := models.Message{
 		Content: body.Messages[nbMessages-1].Content,
-		Phone:   "123456789",
+		Phone:   "0671091441",
 	}
 
 	if err := message.EvaluateMessage(); err != nil {
@@ -54,10 +54,9 @@ func ChatMessage(c *gin.Context) {
 	messages = append(body.Messages, response.Choices[0].Message)
 
 	id := 0
-
 	aiResponse := models.Message{
 		Content:  response.Choices[0].Message.Content,
-		Phone:    "123456789",
+		Phone:    "0671091441",
 		SenderID: &id,
 	}
 

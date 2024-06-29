@@ -22,7 +22,7 @@ func fixUnmatchedQuotes(line string) string {
 }
 
 func getRandomizedSentiment() string {
-	sentiments := []string{"neutral", "positive", "negative"}
+	sentiments := []string{"Neutral", "Positive", "Negative"}
 	return sentiments[rand.Intn(len(sentiments))]
 }
 

@@ -1,4 +1,3 @@
-// const BASE_URL = `${process.env.BACKEND_URL}`;
 const BASE_URL = `${process.env.NEXT_PUBLIC_BACKEND_URL}`;
 
 export interface Message {
@@ -18,7 +17,7 @@ export interface Message {
 export const fetchMessages = async (telPortable: string, accessToken: string) => {
     try {
         const response = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/phone/${telPortable.replace(/\s+/g, '')}`,
+            `${BASE_URL}/messages/phone/${telPortable.replace(/\s+/g, '')}`,
             {
                 method: 'GET',
                 headers: {

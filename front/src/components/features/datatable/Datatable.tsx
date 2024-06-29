@@ -89,6 +89,7 @@ const ColoredCircle = ({ color, tooltip }: { color: string, tooltip: string }) =
 const TableComponent = () => {
     const accessToken = localStorage.getItem('access_token') || '';
     const chatHistoryRef = useRef<HTMLDivElement>(null);
+    const modalRef = useRef<HTMLDivElement>(null);
     const [users, setUsers] = useState<Data[]>([]);
     const [messages, setMessages] = useState<{ question: string, answer: string }[]>([]);
     const [modalTitle, setModalTitle] = useState<string>('');
@@ -213,7 +214,7 @@ const TableComponent = () => {
 
         setModalTitle(`Historique du chat pour ${row.nom} ${row.prenom} ${row.telPortable}`);
         if (chatHistoryRef.current) {
-            chatHistoryRef.current.style.display = 'block';
+            chatHistoryRef.current.style.display = 'flex';
         }
     };
 
@@ -222,6 +223,19 @@ const TableComponent = () => {
             chatHistoryRef.current.style.display = 'none';
         }
     };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+            handleCloseModal();
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <div className="overflow-x-auto">
@@ -240,8 +254,6 @@ const TableComponent = () => {
                         <th className="py-2 px-4 border-b">Prénom</th>
                         <th className="py-2 px-4 border-b">Date Naissance</th>
                         <th className="py-2 px-4 border-b">Médecin</th>
-                        <th className="py-2 px-4 border-b">Intervention/Examen</th>
-                        <th className="py-2 px-4 border-b">Durée Intervention</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -278,20 +290,26 @@ const TableComponent = () => {
                     ))}
                 </tbody>
             </table>
-            <div ref={chatHistoryRef} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50" style={{ display: 'none' }}>
-                <div className="bg-white rounded-lg shadow-lg p-4 min-w-[500px] max-w-2xl w-full">
+            <div ref={chatHistoryRef} className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden">
+                <div ref={modalRef} className="bg-white rounded-lg shadow-lg p-4 min-w-[500px] max-w-2xl w-full">
                     <div className="flex justify-between items-center">
                         <h2 className="text-lg font-bold">{modalTitle}</h2>
                         <button onClick={handleCloseModal} className="text-red-500">x</button>
                     </div>
                     <div className="overflow-y-auto h-96 mb-4">
                         {messages.map((message, index) => (
-                            <div key={index} className="w-full">
-                                <div className="p-2 my-1 rounded-lg bg-gray-200 mr-auto w-3/4">
-                                    {message.question}
+                            <div key={index} className="w-full mb-4">
+                                <div className="flex flex-col items-start w-3/4">
+                                    <div className="text-sm text-gray-600">IA</div>
+                                    <div className="p-2 rounded-lg bg-gray-200 w-full mt-1">
+                                        {message.question}
+                                    </div>
                                 </div>
-                                <div className="p-2 my-1 rounded-lg bg-blue-100 ml-auto w-3/4">
-                                    {message.answer}
+                                <div className="flex flex-col items-end w-3/4 ml-auto">
+                                    <div className="text-sm text-gray-600">Patient</div>
+                                    <div className="p-2 rounded-lg bg-blue-100 w-full mt-1">
+                                        {message.answer}
+                                    </div>
                                 </div>
                             </div>
                         ))}

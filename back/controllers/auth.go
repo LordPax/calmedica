@@ -32,11 +32,6 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	if !user.Verified {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Account not verified"})
-		return
-	}
-
 	if !user.ComparePassword(body.Password) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
 		return

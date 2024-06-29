@@ -6,13 +6,14 @@ import { Button } from '@/components/ui/button';
 import Microphone from '@/components/features/microphone';
 import Uploader from '@/components/ui/uploader';
 
-//million-ignore
-export default function ChatBot() {
+const ChatBot: React.FC = () => {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
     const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    const [formData, setFormData] = useState<{ input: string }>({ input: '' });
+    const [formData, setFormData] = useState<{ input: string, files: File[], phone: string }>({ input: '', files: [], phone: '' }); // State to hold input and files
     const [contextAdded, setContextAdded] = useState(false);
+    const [surveyStep, setSurveyStep] = useState<number>(0);
+    const [survey, setSurvey] = useState<{ question: string; options: string[] } | null>(null);
 
     useEffect(() => {
         if (messagesEndRef.current) {
@@ -30,22 +31,56 @@ export default function ChatBot() {
     }, [addContext, contextAdded]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ input: event.target.value });
+        console.log('formData', formData);
+        setFormData((prevFormData) => ({ ...prevFormData, input: event.target.value }));
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleInputPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData((prevFormData) => ({ ...prevFormData, phone: event.target.value }));
+    }
+
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const { input } = formData;
+        const { input, files, phone } = formData;
 
         if (!input) return;
 
-        sendMessage(input);
-        setFormData({ input: '' });
+        sendMessage(input, phone);
+        setFormData({ input: '', files: [], phone: ''});
+
+        if (files.length > 0) {
+            const formDataToSend = new FormData();
+            formDataToSend.append('phone', formData.phone);
+            formDataToSend.append('content', input);
+            files.forEach(file => {
+                formDataToSend.append('upload[]', file);
+            });
+
+            try {
+                const response = await fetch('http://localhost:8080/messages/', {
+                    method: 'POST',
+                    body: formDataToSend,
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log(result);
+                } else {
+                    console.error('Failed to upload files.');
+                }
+            } catch (error) {
+                console.error('Error uploading files:', error);
+            }
+        }
     };
 
     const handleAudioData = (text: string) => {
-        setFormData((prevFormData) => ({ input: prevFormData.input + text }));
-    };
+        setFormData((prevFormData) => ({ ...prevFormData, input: prevFormData.input + text }));
+    }
+
+    const handleFilesData = (files: File[]) => {
+        setFormData((prevFormData) => ({ ...prevFormData, files }));
+    }
 
     const renderMessages = useCallback(() => {
         return messages?.length > 0
@@ -100,6 +135,13 @@ export default function ChatBot() {
                 <form onSubmit={handleSubmit} className="flex items-center justify-between w-full space-x-2">
                     <input
                         type="text"
+                        onChange={handleInputPhoneChange}
+                        value={formData.phone}
+                        className="flex-grow border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="phone number"
+                    />
+                    <input
+                        type="text"
                         onChange={handleInputChange}
                         value={formData.input}
                         className="flex-grow border p-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -112,7 +154,7 @@ export default function ChatBot() {
                         Send
                     </button>
                     <div className="flex items-center justify-center space-x-3">
-                        <Uploader />
+                        <Uploader onFilesdData={handleFilesData} />
                         <Microphone onAudioData={handleAudioData} />
                     </div>
                 </form>
@@ -120,3 +162,5 @@ export default function ChatBot() {
         </div>
     );
 }
+
+export default ChatBot;

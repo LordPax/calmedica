@@ -11,6 +11,8 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
+const IMAGE_PROMPT = "en 1 mot, détermine le sentiment general de ces images, tu a le choix entre positif, négatif ou neutre, n'explique pas pourquoi, juste donne un sentiment, si tu en a plusieurs, fait une moyenne"
+
 type NegativityPayload struct {
 	Text      string `json:"text"`
 	Providers string `json:"providers"`

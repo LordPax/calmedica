@@ -107,11 +107,30 @@ func RegisterRoutes(r *gin.Engine) {
 			)
 		}
 
+		patients := api.Group("/patients")
+		{
+			patients.GET("/",
+				middlewares.IsLoggedIn(true),
+				middlewares.QueryFilter(),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				GetPatients,
+			)
+			patients.GET("/:patient",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				middlewares.Get[*models.Patient]("patient"),
+				GetPatient,
+			)
+			patients.GET("/phone/:phone",
+				middlewares.IsLoggedIn(true),
+				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
+				GetPatientByPhone,
+			)
+		}
+
 		ai := api.Group("/ai")
 		{
 			ai.POST("/chat",
-				middlewares.IsLoggedIn(true),
-				middlewares.IsRole([]string{models.ROLE_ADMIN, models.ROLE_DOCTOR}),
 				middlewares.Validate[models.ChatDto](),
 				ChatMessage,
 			)

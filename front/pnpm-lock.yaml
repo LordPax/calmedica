@@ -24,11 +24,11 @@ dependencies:
     specifier: ^1.1.0
     version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.3)(react-dom@18.3.1)(react@18.3.1)
   '@tanstack/react-query':
-    specifier: ^5.45.1
+    specifier: ^5.48.0
     version: 5.48.0(react@18.3.1)
   '@types/node':
-    specifier: 20.14.8
-    version: 20.14.8
+    specifier: 20.14.9
+    version: 20.14.9
   '@types/react':
     specifier: 18.3.3
     version: 18.3.3
@@ -54,11 +54,11 @@ dependencies:
     specifier: ^3.5.1
     version: 3.5.1
   ky:
-    specifier: ^1.3.0
+    specifier: ^1.4.0
     version: 1.4.0
   lucide-react:
-    specifier: ^0.396.0
-    version: 0.396.0(react@18.3.1)
+    specifier: ^0.398.0
+    version: 0.398.0(react@18.3.1)
   million:
     specifier: 3.1.11
     version: 3.1.11
@@ -66,7 +66,7 @@ dependencies:
     specifier: 14.2.4
     version: 14.2.4(@babel/core@7.24.7)(react-dom@18.3.1)(react@18.3.1)
   openai:
-    specifier: ^4.52.0
+    specifier: ^4.52.1
     version: 4.52.1
   postcss:
     specifier: 8.4.38
@@ -96,7 +96,7 @@ dependencies:
     specifier: ^8.17.1
     version: 8.17.1
   zustand:
-    specifier: ^4.5.2
+    specifier: ^4.5.4
     version: 4.5.4(@types/react@18.3.3)(react@18.3.1)
 
 devDependencies:
@@ -335,8 +335,8 @@ packages:
       eslint-visitor-keys: 3.4.3
     dev: false
 
-  /@eslint-community/regexpp@4.10.1:
-    resolution: {integrity: sha512-Zm2NGpWELsQAD1xsJzGQpYfvICSsFkEpU0jxBjfdC6uNEWXcHnfs9hScFWtXVDVl+rBQJGrl4g1vcKIejpH9dA==}
+  /@eslint-community/regexpp@4.11.0:
+    resolution: {integrity: sha512-G/M/tIiMrTAxEWRfLfQJMmGNX28IxBg4PBz8XqQhqUHLFI6TL2htpIB1iQCj144V5ee/JaKyT9/WZ0MGZWfA7A==}
     engines: {node: ^12.0.0 || ^14.0.0 || >=16.0.0}
     dev: false
 
@@ -1170,7 +1170,7 @@ packages:
   /@types/formidable@3.4.5:
     resolution: {integrity: sha512-s7YPsNVfnsng5L8sKnG/Gbb2tiwwJTY1conOkJzTMRvJAlLFW1nEua+ADsJQu8N1c0oTHx9+d5nqg10WuT9gHQ==}
     dependencies:
-      '@types/node': 20.14.8
+      '@types/node': 20.14.9
     dev: true
 
   /@types/json5@0.0.29:
@@ -1180,7 +1180,7 @@ packages:
   /@types/node-fetch@2.6.11:
     resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
     dependencies:
-      '@types/node': 20.14.8
+      '@types/node': 20.14.9
       form-data: 4.0.0
     dev: false
 
@@ -1190,8 +1190,8 @@ packages:
       undici-types: 5.26.5
     dev: false
 
-  /@types/node@20.14.8:
-    resolution: {integrity: sha512-DO+2/jZinXfROG7j7WKFn/3C6nFwxy2lLpgLjEXJz+0XKphZlTLJ14mo8Vfg8X5BWN6XjyESXq+LcYdT7tR3bA==}
+  /@types/node@20.14.9:
+    resolution: {integrity: sha512-06OCtnTXtWOZBJlRApleWndH4JsRVs1pDCc8dLSQp+7PpUpX3ePdHyeNSFTeSe7FtKyQkrlPvHwJOW3SLd8Oyg==}
     dependencies:
       undici-types: 5.26.5
 
@@ -1559,7 +1559,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001638
-      electron-to-chromium: 1.4.812
+      electron-to-chromium: 1.4.814
       node-releases: 2.0.14
       update-browserslist-db: 1.0.16(browserslist@4.23.1)
     dev: false
@@ -1850,8 +1850,8 @@ packages:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
     dev: false
 
-  /electron-to-chromium@1.4.812:
-    resolution: {integrity: sha512-7L8fC2Ey/b6SePDFKR2zHAy4mbdp1/38Yk5TsARO66W3hC5KEaeKMMHoxwtuH+jcu2AYLSn9QX04i95t6Fl1Hg==}
+  /electron-to-chromium@1.4.814:
+    resolution: {integrity: sha512-GVulpHjFu1Y9ZvikvbArHmAhZXtm3wHlpjTMcXNGKl4IQ4jMQjlnz8yMQYYqdLHKi/jEL2+CBC2akWVCoIGUdw==}
     dev: false
 
   /emoji-regex@8.0.0:
@@ -2222,7 +2222,7 @@ packages:
     hasBin: true
     dependencies:
       '@eslint-community/eslint-utils': 4.4.0(eslint@9.5.0)
-      '@eslint-community/regexpp': 4.10.1
+      '@eslint-community/regexpp': 4.11.0
       '@eslint/config-array': 0.16.0
       '@eslint/eslintrc': 3.1.0
       '@eslint/js': 9.5.0
@@ -2987,8 +2987,8 @@ packages:
       js-tokens: 4.0.0
     dev: false
 
-  /lru-cache@10.2.2:
-    resolution: {integrity: sha512-9hp3Vp2/hFQUiIwKo8XCeFVnrg8Pk3TYNPIR7tJADKi5YfcF7vEaK7avFHTlSy3kOKYaJQaalfEo6YuXdceBOQ==}
+  /lru-cache@10.3.0:
+    resolution: {integrity: sha512-CQl19J/g+Hbjbv4Y3mFNNXFEL/5t/KCg8POCuUqd4rMKjGG+j1ybER83hxV58zL+dFI1PTkt3GNFSHRt+d8qEQ==}
     engines: {node: 14 || >=16.14}
     dev: false
 
@@ -2998,10 +2998,10 @@ packages:
       yallist: 3.1.1
     dev: false
 
-  /lucide-react@0.396.0(react@18.3.1):
-    resolution: {integrity: sha512-N/zP+9vEfEYHiMWMpjwH/M5diaV0e4UFe07BpgdzaRYce5QvXi87hixf7F0Xqdr3zuX/9u7H/2D4MVXIK22O0A==}
+  /lucide-react@0.398.0(react@18.3.1):
+    resolution: {integrity: sha512-qwTvyiWP1iBIbq4qr5yA7fdjB9fxCy/HKDNM3og5oGZ3NRAMCMDzak7/w+yJJ39AJI3+1yPlAigdpRyF3h7gzw==}
     peerDependencies:
-      react: ^16.5.1 || ^17.0.0 || ^18.0.0
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
     dependencies:
       react: 18.3.1
     dev: false
@@ -3335,7 +3335,7 @@ packages:
     resolution: {integrity: sha512-Xa4Nw17FS9ApQFJ9umLiJS4orGjm7ZzwUrwamcGQuHSzDyth9boKDaycYdDcZDuqYATXw4HFXgaqWTctW/v1HA==}
     engines: {node: '>=16 || 14 >=14.18'}
     dependencies:
-      lru-cache: 10.2.2
+      lru-cache: 10.3.0
       minipass: 7.1.2
     dev: false
 

@@ -9,7 +9,6 @@ import (
 	"math/rand"
 	"os"
 	"strings"
-	"time"
 )
 
 var dataPath = "fixtures/data.csv"
@@ -22,19 +21,9 @@ func fixUnmatchedQuotes(line string) string {
 	return line
 }
 
-func GenerateFrenchPhoneNumber() string {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	var prefix int
-	if r.Intn(10) < 5 {
-		prefix = r.Intn(5) + 1
-	} else {
-		prefix = r.Intn(2) + 6
-	}
-
-	suffix := r.Intn(90000000) + 10000000
-
-	return fmt.Sprintf("0%d%d", prefix, suffix)
+func getRandomizedSentiment() string {
+	sentiments := []string{"Neutral", "Positive", "Negative"}
+	return sentiments[rand.Intn(len(sentiments))]
 }
 
 func cleanCSVContent(lines []string) []string {
@@ -76,6 +65,7 @@ func LoadMessages() error {
 	successfulMessages := 0
 	i := 0
 	for {
+		var patient models.Patient
 		record, err := reader.Read()
 		if err != nil {
 			if err == io.EOF {
@@ -92,9 +82,16 @@ func LoadMessages() error {
 
 		messageContent := record[2]
 
+		patientId := rand.Intn(PATIENT_NB-1) + 1
+		if err = patient.FindOneById(patientId); err != nil {
+			return fmt.Errorf("error finding patient with id %d: %w", patientId, err)
+		}
+
 		message := models.Message{
-			Content: messageContent,
-			Phone:   GenerateFrenchPhoneNumber(),
+			Content:       messageContent,
+			Phone:         patient.Phone,
+			Sentiment:     getRandomizedSentiment(),
+			SentimentRate: fake.RandomFloat(2, 0, 1),
 		}
 
 		if err := message.Save(); err != nil {

@@ -15,7 +15,7 @@ export const useOpenAI = () => {
         });
     }, []);
 
-    const sendMessage = async (message: string) => {
+    const sendMessage = async (message: string, phone: string) => {
         setLoading(true);
 
         const newMessage: Message = { role: 'user', content: message };
@@ -24,30 +24,27 @@ export const useOpenAI = () => {
             newMessage,
         ];
 
-        console.log('Sending message:', newMessage);
-        console.log('New messages array:', newMessages);
-
         setMessages(newMessages);
 
         try {
-            const result = await fetch('/api/chatbot', {
+            const result = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/ai/chat`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ messages: newMessages }),
+                body: JSON.stringify({
+                    phone,
+                    messages: newMessages
+                }),
             });
 
             const response = await result.json();
-            console.log('Response from /api/chatbot:', response);
 
             // Ensure the response messages are of type Message[]
             const responseMessages: Message[] = response.messages.map((msg: any) => ({
                 role: msg.role,
                 content: msg.content,
             }));
-
-            console.log('Response messages array:', responseMessages);
 
             setMessages(responseMessages);
         } catch (error) {

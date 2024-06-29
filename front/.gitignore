@@ -4,6 +4,7 @@ node_modules
 .pnp
 .pnp.js
 out/
+dist/
 
 # IDE
 .idea
@@ -20,6 +21,7 @@ build
 # misc
 .DS_Store
 *.pem
+pages/api/**/dist/
 
 # Nodes dependencies
 # debug

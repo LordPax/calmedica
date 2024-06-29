@@ -1,6 +1,10 @@
 import React, { useState, useRef, ChangeEvent, useCallback } from 'react';
 
-const Uploader: React.FC = () => {
+interface FilesProps {
+  onFilesdData: (files: File[]) => void;
+}
+
+const Uploader: React.FC<FilesProps> = ({ onFilesdData }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -8,11 +12,14 @@ const Uploader: React.FC = () => {
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setFiles(Array.from(event.target.files));
+      onFilesdData(Array.from(event.target.files));
+      console.log(event.target.files);
     }
   };
 
   const handleReset = () => {
     setFiles([]);
+    onFilesdData([]);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -30,6 +37,7 @@ const Uploader: React.FC = () => {
     if (event.dataTransfer.files) {
       setFiles(Array.from(event.dataTransfer.files));
     }
+    console.log(event.dataTransfer.files);
   }, []);
 
   const handleDragOver = (event: React.DragEvent) => {

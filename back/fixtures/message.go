@@ -21,6 +21,11 @@ func fixUnmatchedQuotes(line string) string {
 	return line
 }
 
+func getRandomizedSentiment() string {
+	sentiments := []string{"neutral", "positive", "negative"}
+	return sentiments[rand.Intn(len(sentiments))]
+}
+
 func cleanCSVContent(lines []string) []string {
 	var cleanedLines []string
 
@@ -83,8 +88,10 @@ func LoadMessages() error {
 		}
 
 		message := models.Message{
-			Content: messageContent,
-			Phone:   patient.Phone,
+			Content:       messageContent,
+			Phone:         patient.Phone,
+			Sentiment:     getRandomizedSentiment(),
+			SentimentRate: fake.RandomFloat(2, 0, 100),
 		}
 
 		if err := message.Save(); err != nil {

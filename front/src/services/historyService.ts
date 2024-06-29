@@ -21,7 +21,7 @@ export const fetchMessages = async (telPortable: string, accessToken: string) =>
             {
                 method: 'GET',
                 headers: {
-                    'Authorization': `Bearer ${accessToken}`,
+                    'Authorization': `${accessToken}`,
                     'Content-Type': 'application/json',
                 },
             }

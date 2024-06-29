@@ -31,9 +31,6 @@ export default function DasbhoardPage() {
         <>
             <Header />
             <Datatable />
-            <StatusBar status="Positive" percentage={30.00} />
-            <StatusBar status="Neutral" percentage={50.00} />
-            <StatusBar status="Negative" percentage={20.00} />
             <ChatBot />
         </>
     );

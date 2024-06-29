@@ -91,7 +91,7 @@ func LoadMessages() error {
 			Content:       messageContent,
 			Phone:         patient.Phone,
 			Sentiment:     getRandomizedSentiment(),
-			SentimentRate: fake.RandomFloat(2, 0, 100),
+			SentimentRate: fake.RandomFloat(2, 0, 1),
 		}
 
 		if err := message.Save(); err != nil {

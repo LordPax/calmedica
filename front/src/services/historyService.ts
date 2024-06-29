@@ -18,7 +18,7 @@ export interface Message {
 export const fetchMessages = async (telPortable: string, accessToken: string) => {
     try {
         const response = await fetch(
-            `${BASE_URL}/messages/phone/${telPortable.replace(/\s+/g, '')}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_URL}/messages/phone/${telPortable.replace(/\s+/g, '')}`,
             {
                 method: 'GET',
                 headers: {

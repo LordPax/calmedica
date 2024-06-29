@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Trash2, PauseCircle, PlayCircle, Eye, FileText, Download } from 'lucide-react';
 import { fetchMessages, Message } from '@/services/historyService';
 import { WebsocketService } from '@/services/websocket';
+import StatusBar from '@/components/ui/statusBar';
 
 interface Data {
     etape: string;
@@ -139,14 +140,18 @@ const TableComponent = () => {
                         console.warn(`Aucun statut trouvé pour l'utilisateur avec le téléphone: ${user.phone}`);
                         return null;
                     }
+                    const filteredStatuses = userStatuses.filter((status: any) => status.sender_id !== 0);
 
-                    const latestStatus = userStatuses.reduce((latest: any, status: any) => {
-                        return new Date(status.date) > new Date(latest.date) ? status : latest;
-                    });
+                    if (filteredStatuses.length === 0) {
+                        console.warn(`Aucun statut valide trouvé pour l'utilisateur avec le téléphone: ${user.phone}`);
+                        return null;
+                    }
+                    
+                    const latestStatus = filteredStatuses[filteredStatuses.length - 1];
 
                     const lastSentiment = latestStatus.sentiment || '';
 
-                    const tooltipText = lastSentiment === 'positive' ? 'Sentiment positif' : lastSentiment === 'neutral' ? 'Sentiment neutre' : 'Sentiment négatif';
+                    const tooltipText = lastSentiment === 'Positive' ? 'Sentiment positif' : lastSentiment === 'Neutral' ? 'Sentiment neutre' : 'Sentiment négatif';
 
                     return createData(
                         {
@@ -214,11 +219,11 @@ const TableComponent = () => {
 
     const getIconColor = (etat: string) => {
         switch (etat) {
-            case 'neutral':
+            case 'Neutral':
                 return 'orange';
-            case 'positive':
+            case 'Positive':
                 return 'green';
-            case 'negative':
+            case 'Negative':
                 return 'red';
             default:
                 return 'gray';
@@ -314,16 +319,17 @@ const TableComponent = () => {
                     </div>
                     <div className="overflow-y-auto h-96 mb-4">
                         {messagesByPhone[clickedPhone]?.map((message, index) => (
-                            <div key={index} className="w-full mb-4">
+                            <div key={message.id} className="w-full mb-4">
                                 {message.sender_id == null ? (
-                                    <div className="flex flex-col items-end w-3/4 ml-auto">
+                                    <div className="flex flex-col items-end w-10/12 ml-auto">
                                         <div className="text-sm text-gray-600">Patient</div>
-                                        <div className="p-2 rounded-lg bg-blue-100 w-full mt-1">
-                                            {message.content}
+                                        <div className="flex items-center justify-between p-2 rounded-lg bg-blue-100 w-full mt-1">
+                                            <span className="flex-grow">{message.content}</span>
+                                            <StatusBar className="w-[11rem] ml-4" percentage={message.sentiment_rate ?? 0} status={message.sentiment as 'Neutral' | 'Positive' | 'Negative'} />
                                         </div>
                                     </div>
                                 ) : (
-                                    <div className="flex flex-col items-start w-3/4">
+                                    <div className="flex flex-col items-start w-10/12">
                                         <div className="text-sm text-gray-600">IA</div>
                                         <div className="p-2 rounded-lg bg-gray-200 w-full mt-1">
                                             {message.content}

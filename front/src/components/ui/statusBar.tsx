@@ -4,6 +4,7 @@ import { Smile, Meh, Frown } from 'lucide-react';
 interface StatusBarProps {
     status: 'Positive' | 'Neutral' | 'Negative';
     percentage: number;
+    className?: string;
 }
 
 const statusConfig = {
@@ -21,16 +22,17 @@ const statusConfig = {
     }
 };
 
-const StatusBar: React.FC<StatusBarProps> = ({ status, percentage }) => {
+const StatusBar: React.FC<StatusBarProps> = ({ status, percentage, className }) => {
     const { colorClass, icon } = statusConfig[status];
+    const formattedPercentage = (percentage * 100).toFixed(2);
     return (
-        <div className={`flex items-center p-4 rounded-lg border-l-4 ${colorClass}`}>
+        <div className={`flex items-center p-2 rounded-lg border-l-4 ${colorClass} ${className}`}>
             <div className="flex items-center">
                 {icon}
                 <span className="ml-2 font-semibold">{status}</span>
             </div>
-            <div className="ml-auto font-semibold">
-                {percentage.toFixed(2)}%
+            <div className="ml-2 font-semibold">
+                {formattedPercentage}%
             </div>
         </div>
     );

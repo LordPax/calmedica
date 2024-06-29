@@ -6,7 +6,6 @@ import ChatBot from "@/components/features/chatbot/index";
 import Datatable from "@/components/features/datatable/Datatable";
 import Header from '@/components/layout/Header';
 import { Loader } from '@/components/ui/loader';
-import StatusBar from '@/components/ui/statusBar';
 
 export default function DasbhoardPage() {
     const { accessToken, isInitialized } = useSession();
@@ -31,9 +30,6 @@ export default function DasbhoardPage() {
         <>
             <Header />
             <Datatable />
-            <StatusBar status="Positive" percentage={30.00} />
-            <StatusBar status="Neutral" percentage={50.00} />
-            <StatusBar status="Negative" percentage={20.00} />
             <ChatBot />
         </>
     );

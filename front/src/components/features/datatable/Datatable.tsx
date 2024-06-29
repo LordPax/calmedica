@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Trash2, PauseCircle, PlayCircle, Eye, FileText, Download, Circle } from 'lucide-react';
 import { fetchMessages, Message } from '@/services/historyService';
+import { WebsocketService } from '@/services/websocket';
 
 interface Data {
     etape: string;
@@ -107,6 +108,15 @@ const TableComponent = () => {
 
         if (accessToken) {
             fetchData();
+            const ws = WebsocketService.getInstance(accessToken);
+            ws.on('message:create', (data) => {
+                console.log('ws event create message', data);
+                setMessages((prevMessages) => [...prevMessages, data]);
+            });
+            ws.on('message:image-ai', (data) => {
+                console.log('ws event image message', data);
+            });
+
         } else {
             console.error('Access token est manquant');
         }

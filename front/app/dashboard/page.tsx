@@ -5,7 +5,6 @@ import { useSession } from '@/context/sessionProvider';
 import ChatBot from "@/components/features/chatbot/index";
 import Datatable from "@/components/features/datatable/Datatable";
 import Header from '@/components/layout/Header';
-import { WebsocketService } from '@/services/websocket';
 import { Loader } from '@/components/ui/loader';
 
 export default function DasbhoardPage() {
@@ -18,16 +17,6 @@ export default function DasbhoardPage() {
             if (!accessToken) {
                 router.push('/login');
             } else {
-                const token = localStorage.getItem('access_token') || '';
-                const ws = WebsocketService.getInstance(token);
-
-                ws.on('message:create', (data) => {
-                    console.log('ws event create message', data);
-                });
-                ws.on('message:image-ai', (data) => {
-                    console.log('ws event image message', data);
-                });
-
                 setIsLoading(false);
             }
         }

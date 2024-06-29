@@ -8,13 +8,17 @@ Bienvenue sur le projet CalMedica. Ce projet vise à fournir une solution de ges
 - **Teddy Gauthier**
 - **Maxime Pietrucci-Blacher**
 
-## Description
+## Description des features produites durant ce Hackathon
 
 CalMedica est conçu pour aider les professionnels de la santé à gérer efficacement les informations des patients, planifier les rendez-vous, et simplifier la facturation. Voici quelques-unes des fonctionnalités clés :
 
-- **Gestion des Patients** (par Ilies Slim) : Gérez facilement les informations de vos patients et accédez à leurs dossiers médicaux en un clic.
-- **Planification des Rendez-vous** (par Teddy Gauthier) : Organisez vos rendez-vous et recevez des rappels automatiques pour ne jamais manquer une consultation.
-- **Facturation Simplifiée** (par Maxime Pietrucci-Blacher) : Générez des factures précises et suivez les paiements de vos patients en toute simplicité.
+- **Authentification** (Tout le monde) : S'authentifier à l'application / Dashboard
+- **Chat** (par Teddy Gauthier) : Possibilité de converser avec une I.A au sein du dashboard
+- **Microphone** (par Maxime Pietrucci-Blacher) : Possibilité d'ajouter un message vocal à la conversation
+- **Historique** (par Ilies Slim): Visualisation de l'historique des messages d'un utilisateurs 
+- **Gestion des sentiments** (Tout le monde): Possibilité d'analyser les messages de l'utilisateur et de déterminer grâce à une IA le pourcentage de justesse / le sentiment derrière ceux-ci
+- **Affichage des status** (Tout le monde): Affichage des différents status de l'utilisateur selon le dernier message (neutre, positif ou négatif)
+- **Upload des images** (Tout le monde): Possibilité d'inclure une image à la conversation en cours et d'obtenir une analyse de l'IA
 
 ## Installation
 

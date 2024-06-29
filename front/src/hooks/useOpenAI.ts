@@ -15,7 +15,7 @@ export const useOpenAI = () => {
         });
     }, []);
 
-    const sendMessage = async (message: string) => {
+    const sendMessage = async (message: string, phone: string) => {
         setLoading(true);
 
         const newMessage: Message = { role: 'user', content: message };
@@ -32,7 +32,10 @@ export const useOpenAI = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ messages: newMessages }),
+                body: JSON.stringify({
+                    phone,
+                    messages: newMessages
+                }),
             });
 
             const response = await result.json();

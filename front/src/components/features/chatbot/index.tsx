@@ -10,7 +10,7 @@ const ChatBot: React.FC = () => {
     const { messages, sendMessage, loading, addContext } = useOpenAI();
     const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
-    const [formData, setFormData] = useState<{ input: string, files: File[] }>({ input: '', files: [] }); // State to hold input and files
+    const [formData, setFormData] = useState<{ input: string, files: File[], phone: string }>({ input: '', files: [], phone: '' }); // State to hold input and files
     const [contextAdded, setContextAdded] = useState(false);
     const [surveyStep, setSurveyStep] = useState<number>(0);
     const [survey, setSurvey] = useState<{ question: string; options: string[] } | null>(null);
@@ -35,18 +35,22 @@ const ChatBot: React.FC = () => {
         setFormData((prevFormData) => ({ ...prevFormData, input: event.target.value }));
     };
 
+    const handleInputPhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData((prevFormData) => ({ ...prevFormData, phone: event.target.value }));
+    }
+
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        const { input, files } = formData;
+        const { input, files, phone } = formData;
 
         if (!input) return;
 
-        sendMessage(input);
-        setFormData({ input: '', files: [] });
+        sendMessage(input, phone);
+        setFormData({ input: '', files: [], phone: ''});
 
         if (files.length > 0) {
             const formDataToSend = new FormData();
-            formDataToSend.append('phone', '123456789');
+            formDataToSend.append('phone', formData.phone);
             formDataToSend.append('content', input);
             files.forEach(file => {
                 formDataToSend.append('upload[]', file);
@@ -129,6 +133,13 @@ const ChatBot: React.FC = () => {
                     <div ref={messagesEndRef} />
                 </div>
                 <form onSubmit={handleSubmit} className="flex items-center justify-between w-full space-x-2">
+                    <input
+                        type="text"
+                        onChange={handleInputPhoneChange}
+                        value={formData.phone}
+                        className="flex-grow border p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="phone number"
+                    />
                     <input
                         type="text"
                         onChange={handleInputChange}

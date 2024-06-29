@@ -140,11 +140,16 @@ const TableComponent = () => {
                         console.warn(`Aucun statut trouvé pour l'utilisateur avec le téléphone: ${user.phone}`);
                         return null;
                     }
-                    const latestStatus = userStatuses[userStatuses.length - 1];
+                    const filteredStatuses = userStatuses.filter((status: any) => status.sender_id !== 0);
+
+                    if (filteredStatuses.length === 0) {
+                        console.warn(`Aucun statut valide trouvé pour l'utilisateur avec le téléphone: ${user.phone}`);
+                        return null;
+                    }
+                    
+                    const latestStatus = filteredStatuses[filteredStatuses.length - 1];
 
                     const lastSentiment = latestStatus.sentiment || '';
-
-                    console.log(lastSentiment)
 
                     const tooltipText = lastSentiment === 'Positive' ? 'Sentiment positif' : lastSentiment === 'Neutral' ? 'Sentiment neutre' : 'Sentiment négatif';
 

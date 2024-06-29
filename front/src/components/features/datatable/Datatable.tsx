@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Trash2, PauseCircle, PlayCircle, Eye, FileText, Download } from 'lucide-react';
+import { fetchMessages, Message } from '@/services/historyService';
+import { WebsocketService } from '@/services/websocket';
 
 interface Data {
     etape: string;
@@ -90,8 +92,10 @@ const TableComponent = () => {
     const accessToken = localStorage.getItem('access_token') || '';
     const chatHistoryRef = useRef<HTMLDivElement>(null);
     const modalRef = useRef<HTMLDivElement>(null);
+    const [clickedPhone, setClickedPhone] = useState<string>('');
     const [users, setUsers] = useState<Data[]>([]);
-    const [messages, setMessages] = useState<{ question: string, answer: string }[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [messagesByPhone, setMessagesByPhone] = useState<Record<string, Message[]>>({});
     const [modalTitle, setModalTitle] = useState<string>('');
 
     useEffect(() => {
@@ -173,6 +177,16 @@ const TableComponent = () => {
                     );
                 }).filter((data: Data | null) => data !== null);
 
+                for (const data of combinedData) {
+                    const response = await fetchMessages(data.telPortable, accessToken);
+                    setMessagesByPhone((prevMessagesByPhone) => {
+                        return {
+                            ...prevMessagesByPhone,
+                            [data.telPortable]: response,
+                        };
+                    });
+                }
+
                 setUsers(combinedData);
             } catch (error) {
                 console.error('Erreur lors de la récupération des utilisateurs:', error);
@@ -181,6 +195,18 @@ const TableComponent = () => {
 
         if (accessToken) {
             fetchData();
+            const ws = WebsocketService.getInstance(accessToken);
+            ws.on('message:create', (data) => {
+                console.log('ws event create message', data);
+                setMessagesByPhone((prevMessagesByPhone) => {
+                    const phone = data.phone;
+                    const messages = prevMessagesByPhone[phone] || [];
+                    return {
+                        ...prevMessagesByPhone,
+                        [phone]: [...messages, data],
+                    };
+                });
+            });
         } else {
             console.error('Access token est manquant');
         }
@@ -200,17 +226,7 @@ const TableComponent = () => {
     };
 
     const handlePhoneClick = async (row: Data) => {
-        const request = fetch(`/api/messages/phone/${row.telPortable}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `${accessToken}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        const response = await request;
-        const messagesContent = await response.json();
-        setMessages(messagesContent);
+        setClickedPhone(row.telPortable);
 
         setModalTitle(`Historique du chat pour ${row.nom} ${row.prenom} ${row.telPortable}`);
         if (chatHistoryRef.current) {
@@ -297,20 +313,23 @@ const TableComponent = () => {
                         <button onClick={handleCloseModal} className="text-red-500">x</button>
                     </div>
                     <div className="overflow-y-auto h-96 mb-4">
-                        {messages.map((message, index) => (
+                        {messagesByPhone[clickedPhone]?.map((message, index) => (
                             <div key={index} className="w-full mb-4">
-                                <div className="flex flex-col items-start w-3/4">
-                                    <div className="text-sm text-gray-600">IA</div>
-                                    <div className="p-2 rounded-lg bg-gray-200 w-full mt-1">
-                                        {message.question}
+                                {message.sender_id == null ? (
+                                    <div className="flex flex-col items-end w-3/4 ml-auto">
+                                        <div className="text-sm text-gray-600">Patient</div>
+                                        <div className="p-2 rounded-lg bg-blue-100 w-full mt-1">
+                                            {message.content}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex flex-col items-end w-3/4 ml-auto">
-                                    <div className="text-sm text-gray-600">Patient</div>
-                                    <div className="p-2 rounded-lg bg-blue-100 w-full mt-1">
-                                        {message.answer}
+                                ) : (
+                                    <div className="flex flex-col items-start w-3/4">
+                                        <div className="text-sm text-gray-600">IA</div>
+                                        <div className="p-2 rounded-lg bg-gray-200 w-full mt-1">
+                                            {message.content}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                         ))}
                     </div>

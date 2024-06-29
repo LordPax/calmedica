@@ -6,7 +6,6 @@ import ChatBot from "@/components/features/chatbot/index";
 import Datatable from "@/components/features/datatable/Datatable";
 import Header from '@/components/layout/Header';
 import { Loader } from '@/components/ui/loader';
-import StatusBar from '@/components/ui/statusBar';
 
 export default function DasbhoardPage() {
     const { accessToken, isInitialized } = useSession();

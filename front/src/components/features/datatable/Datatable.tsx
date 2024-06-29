@@ -325,7 +325,7 @@ const TableComponent = () => {
                                         <div className="text-sm text-gray-600">Patient</div>
                                         <div className="flex items-center justify-between p-2 rounded-lg bg-blue-100 w-full mt-1">
                                             <span className="flex-grow">{message.content}</span>
-                                            <StatusBar className="w-40 ml-4" percentage={message.sentiment_rate ?? 0} status={message.sentiment as 'Neutral' | 'Positive' | 'Negative'} />
+                                            <StatusBar className="w-[11rem] ml-4" percentage={message.sentiment_rate ?? 0} status={message.sentiment as 'Neutral' | 'Positive' | 'Negative'} />
                                         </div>
                                     </div>
                                 ) : (

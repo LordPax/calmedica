@@ -6,6 +6,7 @@ interface StatusBarProps {
     percentage: number;
     className?: string;
 }
+
 const statusConfig = {
     Positive: {
         colorClass: 'bg-green-100 text-green-600 border-green-500',
@@ -23,6 +24,7 @@ const statusConfig = {
 
 const StatusBar: React.FC<StatusBarProps> = ({ status, percentage, className }) => {
     const { colorClass, icon } = statusConfig[status];
+    const formattedPercentage = (percentage * 100).toFixed(2);
     return (
         <div className={`flex items-center p-2 rounded-lg border-l-4 ${colorClass} ${className}`}>
             <div className="flex items-center">
@@ -30,7 +32,7 @@ const StatusBar: React.FC<StatusBarProps> = ({ status, percentage, className }) 
                 <span className="ml-2 font-semibold">{status}</span>
             </div>
             <div className="ml-2 font-semibold">
-                {percentage.toFixed(2)}%
+                {formattedPercentage}%
             </div>
         </div>
     );

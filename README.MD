@@ -20,48 +20,104 @@ CalMedica est conçu pour aider les professionnels de la santé à gérer effica
 - **Affichage des status** (Tout le monde): Affichage des différents status de l'utilisateur selon le dernier message (neutre, positif ou négatif)
 - **Upload des images** (Tout le monde): Possibilité d'inclure une image à la conversation en cours et d'obtenir une analyse de l'IA
 
-## Installation
+## Technologies utilisées
+
+* [Go](https://golang.org/)
+* [Swag](https://github.com/swaggo/swag)
+* [pnpm](https://pnpm.io/)
+* [docker](https://www.docker.com/)
+* [docker-compose](https://docs.docker.com/compose/)
+
+## Initialisation du projet
+
+1. Clonez le dépôt :
+```bash
+git clone https://github.com/LordPax/calmedica.git
+```
+
+2. Accédez au répertoire du projet :
+```bash
+cd calmedica
+```
+
+3. Lancer les conteneur docker
+```bash
+docker-compose up
+```
+
+## Installation front
 
 Pour installer et exécuter ce projet localement, veuillez suivre les étapes ci-dessous :
 
-1. Clonez le dépôt :
-    ```bash
-    git clone https://github.com/votre-repo/calmedica.git
-    ```
-2. Accédez au répertoire du projet :
-    ```bash
-    cd calmedica
-    ```
+1. Accédez au répertoire du projet :
+```bash
+cd front
+```
+
+2. Créez un fichier `.env` à la racine du répertoire `front` et ajoutez les variables d'environnement suivantes :
+```bash
+BACKEND_URL=http://localhost:8080
+NEXT_PUBLIC_BACKEND_URL=http://localhost:8080
+NEXT_PUBLIC_SOCKET_URL=ws://localhost:8080/ws
+OPENAI_API_KEY=
+```
+
 3. Installez les dépendances :
-    ```bash
-    npm install
-    ```
+```bash
+pnpm install
+```
+
 4. Démarrez le serveur de développement :
-    ```bash
-    npm run dev
-    ```
+```bash
+pnpm run dev
+```
 
-## Contribution
+## Installation back
 
-Les contributions sont les bienvenues ! Si vous souhaitez contribuer à ce projet, veuillez suivre les étapes ci-dessous :
+1. Accédez au répertoire du projet :
+```bash
+cd back
+```
 
-1. Forkez le dépôt.
-2. Créez une branche pour votre fonctionnalité ou correction de bug :
-    ```bash
-    git checkout -b ma-nouvelle-fonctionnalite
-    ```
-3. Commitez vos modifications :
-    ```bash
-    git commit -m 'Ajout de ma nouvelle fonctionnalité'
-    ```
-4. Poussez votre branche :
-    ```bash
-    git push origin ma-nouvelle-fonctionnalite
-    ```
-5. Ouvrez une Pull Request.
+2. Créez un fichier `.env` à la racine du répertoire `back` et ajoutez les variables d'environnement suivantes :
+```bash
+ALLOWED_ORIGINS='*'
+GIN_MODE=debug
 
-Merci de votre intérêt pour CalMedica !
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=root
+DB_NAME=golang-app
+DB_PORT=5432
 
-## Licence
+COOKIE_SECURE=false
+JWT_SECRET_KEY=123456789
+BREVO_API_KEY=
+BREVO_SENDER=noreply@calmedica.fr
 
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+
+OPENAI_API_KEY=
+
+EDENAI_API_URL=
+EDENAI_API_KEY=
+```
+
+3. Intaller les dépendances :
+```bash
+go mod tidy
+go mod vendor
+swag init
+```
+
+4. Build le projet :
+```bash
+go build
+```
+
+5. Lancer le projet :
+```bash
+./calmedica
+```

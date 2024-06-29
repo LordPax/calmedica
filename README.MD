@@ -4,9 +4,9 @@ Bienvenue sur le projet CalMedica. Ce projet vise à fournir une solution de ges
 
 ## Développeurs du Projet
 
-- **Ilies Slim**
-- **Teddy Gauthier**
-- **Maxime Pietrucci-Blacher**
+- **Ilies Slim** (Ilies77)
+- **Teddy Gauthier** (Lordpax)
+- **Maxime Pietrucci-Blacher** (Sunshio)
 
 ## Description des features produites durant ce Hackathon
 
